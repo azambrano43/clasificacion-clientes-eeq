@@ -1,0 +1,7 @@
+# Ignoramos carpetas de datos:
+
+/agrupaciones/
+/mediciones_originales/
+/mediciones_por_anio/
+/mediciones_por_anio_limpias/
+/archivos_entrada_script/
