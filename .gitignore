@@ -13,3 +13,5 @@
 /config
 /outputs
 *.env
+*.pyc
+//__pycache__
