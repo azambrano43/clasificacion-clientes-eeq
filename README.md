@@ -82,32 +82,34 @@ El flujo completo está orquestado con:
 ---
 
 ## 📁 Estructura del repositorio
+```text
 📂 dags/
-   ├─ potencia_aparente_etl_dag.py
+│  └─ potencia_aparente_etl_dag.py
 📂 notebooks/
-   ├─ clasificación_clientes-v2.ipynb
-   ├─ clasificación_clientes.ipynb
-   ├─ pruebas_cluster.ipynb
+│  ├─ clasificación_clientes-v2.ipynb
+│  ├─ clasificación_clientes.ipynb
+│  └─ pruebas_cluster.ipynb
 📂 utils/
-   ├─ utilities.py
-   ├─ .env
+│  ├─ utilities.py
+│  └─ .env
 📂 data/
-   ├─ mediciones_por_mes_g1/
-   ├─ mediciones_por_mes_g2/
+│  ├─ mediciones_por_mes_g1/
+│  └─ mediciones_por_mes_g2/
 📂 outputs/
-   ├─ curvas_tipo/
-   ├─ entregables_por_cliente/
+│  ├─ curvas_tipo/
+│  └─ entregables_por_cliente/
 📂 latex/
-   ├─ imgs/
-   ├─ main.tex
-   ├─ referencias.bib
+│  ├─ imgs/
+│  ├─ main.tex
+│  └─ referencias.bib
 📜 requirements.txt
 📜 docker-compose.yaml
 📜 .gitignore
 📜 CALENDARIO FERIADOS 2022-2025.pdf
 📜 Mini_informe_técnico.docx
+📜 tic_context.txt
 📜 README.md
-
+```
 
 ---
 
