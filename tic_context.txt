@@ -1,0 +1,37 @@
+CONTEXTO SOBRE LA TIC
+
+Mi TIC consiste en la agrupación de clientes no regulados del sector eléctrico en función de una curva de carga representativa de cada uno. Para ello, he realizado el siguiente proceso:
+
+* Por cada cliente, tengo las mediciones mensuales de todo el año 2023. Estas pueden venir dadas tanto en potencia activa y reactiva como en energía.
+
+**Proceso ETL:**
+
+* Itero sobre cada cliente para extraer y unificar sus 12 archivos de mediciones mensuales, manteniendo solo los campos de utilidad que servirán posteriormente.
+* Uno de los mayores problemas es la diferencia en el formato de fechas; un mismo cliente puede tener en su archivo de mediciones de enero el formato de fecha como 'AAAA-MM-DD' y en el archivo de febrero el formato 'AAAA/MM/DD' o 'DD-MM-AAAA'.
+* Otro problema a corregir era que las columnas con la variable a analizar tenían como separador de miles el '.' y separador decimal ',', dado que Python no acepta dicho formato. Se tuvo que eliminar el punto como separador de miles y reemplazar la coma por punto, el cual Python identifica como separador decimal.
+* Una vez tenemos nuestras columnas limpias, se procede a calcular la potencia aparente para cada cliente. Aquí tenemos dos casos:
+
+  * Clientes que tienen demanda activa y reactiva: La potencia aparente se calcula mediante el teorema de Pitágoras, donde la potencia aparente es el resultado de aplicar raíz cuadrada a la suma del cuadrado de la demanda activa y demanda reactiva.
+  * Clientes que tienen energía: Debido a que es energía cada 15 minutos, la potencia aparente se obtiene como resultado de la multiplicación de dicha energía (AS (kWh)) por cuatro. Para este tipo de clientes, a todas sus fechas se les resta un timedelta de 15 minutos, para que la primera hora ordenada ascendentemente sea siempre 00:00.
+* Debido a que se quiere agrupar a los clientes en base a su comportamiento energético, se han excluido días de fin de semana y días feriados en Ecuador.
+* Cualquier valor nulo es interpolado utilizando una función polinómica de orden 3, ya que estos datos no son lineales y tienen diferentes comportamientos. (Es importante revisar métodos para interpolar series temporales de demanda eléctrica).
+* Una vez realizado todo lo anterior, los datos del cliente son escalados utilizando MinMaxScaler. Cada día es escalado individualmente debido a que un día con un comportamiento atípico puede aplanar todos los demás valores del año (se debe explicar por qué estos datos atípicos no se eliminan, dado el natural comportamiento de la demanda eléctrica y porque son clientes no regulados). Por esto, se ha decidido escalar cada día individualmente.
+* Una vez se tienen los datos preprocesados, cada cliente tiene un DataFrame con todos sus datos del año, con las columnas: Fecha, Hora, Potencia\_aparente y Potencia\_aparente\_escalada.
+* En este punto, se generan los entregables solicitados por la empresa distribuidora de energía, que son los siguientes:
+
+  * La curva de carga característica del cliente (curva tipo).
+  * La curva del día que tuvo su máxima demanda.
+  * Un archivo .csv con las coordenadas de la curva tipo.
+  * Un archivo .csv con las coordenadas de la curva del día de máxima demanda.
+  * Un archivo plano de texto con la demanda máxima y mínima del cliente, para poder reescalar dicha curva a sus valores originales de potencia aparente.
+* El proceso ETL finaliza aquí con la carga de los datos de la curva tipo de cada cliente en una base de datos de MongoDB.
+
+**Proceso de agrupación de los clientes en función de su curva tipo:**
+
+* Se han seleccionado cuatro modelos de aprendizaje no supervisado (KMeans, GaussianMixture, Birch y SpectralClustering).
+* Debido a que se quiere que los clientes sean agrupados en grupos homogéneos en función de la forma de sus curvas, se aplicó un método matemático (pendiente de definir nombre). Lo que se hace es hacer que todas las curvas empiecen siempre en la coordenada (00:00, 0), esto debido a que hay clientes cuyas curvas tienen la misma forma pero desfasadas en el eje Y. Esto podría hacer que los modelos interpreten estas curvas como diferentes cuando en realidad el comportamiento es el mismo solo que desplazado. (Se debe recalcar que se quiere agrupar a los clientes en función de la forma de sus curvas para observar patrones de comportamiento entre los grupos).
+* Se ha aplicado el método del codo para obtener el número óptimo de clústeres, dando como resultado K=4 como número óptimo de clústeres.
+* Para obtener el máximo rendimiento de cada algoritmo de clustering respectivamente, se hizo una hiperparametrización utilizando una cuadrícula con varios parámetros a probar para cada algoritmo. El factor decisivo para elegir los parámetros óptimos para cada algoritmo fue el puntaje de silueta para las agrupaciones que genera.
+* Una vez obtenidos los hiperparámetros óptimos para cada algoritmo, se han aplicado los algoritmos de clustering a los clientes.
+* Para fines de visualización, la curva promedio de cada clúster fue graficada para observar qué comportamiento se espera de los clientes que están agrupados ahí. También se implementó una función que grafica, en una misma imagen, todas las curvas tipo de los clientes de dicho grupo.
+* Finalmente, se hizo una tabla comparativa donde la calidad de agrupación ofrecida por cada algoritmo fue cuantificada haciendo uso de métricas como el Puntaje de Silueta, SSE, CHI y DBI.

@@ -1,0 +1,21 @@
+# Procesamiento de datos
+pandas
+numpy
+openpyxl
+
+# Conexión con MongoDB
+pymongo
+
+# Machine Learning
+scikit-learn
+
+# Visualización
+matplotlib
+seaborn
+
+# Interpolación avanzada y series temporales
+scipy
+
+# Otros
+python-dateutil
+dotenv
