@@ -142,7 +142,7 @@ A mis padrinos, Franklin Vásquez y Silvana Barba, por acogerme con cariño en s
 
 \vspace{-2mm}
 
-A Jhonny Sánchez, mi hermano de otra madre, con quien he compartido invaluables momentos durante gran parte de mi niñez. Gracias por ser ese hermano que nunca pude tener, pero que la vida se encargó de darme.\\
+A mi primo Jhonny Sánchez, quien ha sido como un hermano para mí, con quien he compartido invaluables momentos durante gran parte de mi niñez. Gracias por ser ese hermano que nunca pude tener, pero que la vida se encargó de darme.\\
 
 \vspace{-2mm}
 
@@ -182,7 +182,7 @@ Quiero agradecer de manera muy especial a mi prima Carolina Vásquez por todo lo
 
 \vspace{-2mm}
 
-Agradezco de igual manera al ingeniero Boris Astudillo por compartir conmigo sus valiosos consejos durante mi vida universitaria y, por su constante guía y apoyo durante todo el proceso de desarrollo de mi proyecto de titulación.\\
+Quiero expresar mi más profundo agradecimiento al Ing. Boris Astudillo por su invaluable orientación, sus sabios consejos y por su constante guía y apoyo a lo largo de mi formación universitaria, en particular durante el desarrollo de mi proyecto de titulación.\\
 
 \vspace{-2mm}
 
@@ -302,31 +302,8 @@ Estas curvas de carga reflejan el patrón de consumo cotidiano que poseen los cl
 
 Debido a la naturaleza de los clientes no regulados y, agregando el hecho de que en su mayoría son grandes clientes, segmentarlos en grupos homogéneos permite optimizar la gestión de la demanda y mejorar la planificación del suministro eléctrico. Al agrupar clientes con patrones de consumo similares, es posible diseñar estrategias más eficientes para la contratación de energía, desarrollar y optimizar modelos tarifarios y, mejorar la predicción de la demanda a futuro \cite{curva_carga_1}. Además, esta segmentación ayuda a evitar el sobredimensionamiento o subdimensionamiento de la capacidad de generación y distribución, garantizando un uso más eficiente de los recursos y optimizando los costos operativos.
 
-\subsection{Metodología CRISP-DM}\\
-CRISP-DM, cuyas siglas corresponden a Cross-Industry Standard Process for Data Mining, es un método probado utilizado para orientar proyectos de minería de datos. Ofrece una serie de fases que resúmen el ciclo vital de minería de datos, a la vez que incluye descripciones y tareas necesarias en cada fase, ayudando a estructurar un flujo de trabajo ordenado cuya secuencia no es estricta, donde se puede avanzar y retroceder entre fases de ser necesario \cite{crisp-dm1}.\\
-
-El modelo CRISP-DM es sumamente flexible, y sus fases pueden ser personalizadas en función de los objetivos del proyecto, pudiendo crear un modelo de minería de datos que se adapte a necesidades concretas \cite{crisp-dm1}. CRISP-DM contiene un total de seis fases, tal y como se describe en \cite{crisp-dm2}:
-
-\begin{enumerate}
-    \item \textbf{Comprensión del negocio:} Esta fase inicial se enfoca en analizar y comprender tanto los objetivos como los requerimientos del proyecto desde la perspectiva del negocio. Posteriormente todo este conocimiento es plasmado en un proyecto de minería de datos enfocado en alcanzar los objetivos.
-    
-    \item \textbf{Comprensión de los datos:} La fase de comprensión de datos tiene como principal objetivo la 'familiarización' con los datos. Para lograr esto se realiza una recolección inicial de los datos y se procede a realizar un pequeño análisis exploratorio de los datos con el fin de comprender los datos que se tienen e identificar problemas con la calidad de los mismos.
-    
-    \item \textbf{Preparación de los datos:} Esta fase es crucial en CRISP-DM, debido a que abarca todas las actividades requeridas hasta la construcción final del conjunto de datos, los cuales servirán posteriormente para la fase de modelado. Esta fase incluye tareas como la limpieza, transformación y normalización de los datos, con el fin de asegurar la calidad de estos.
-    
-    \item \textbf{Modelado:} Varias herramientas de modelamiento son seleccionadas con el fin de ser aplicadas sobre nuestro conjunto de datos preparados. Los parámetros de dichas herramientas deben ser calibrados hasta obtener los valores óptimos que ofrezcan los mejores resultados.
-    
-    \item \textbf{Evaluación:} En esta penúltima fase del proyecto, ya se tiene construido uno o varios modelos que aparentemente ofrecen resultados de calidad. Antes de proceder a la fase del despliegue, se realiza una evaluación del modelo, revisando cada paso ejecutado hasta la construcción final del mismo con el fin de determinar si existe algún objetivo que no haya sido abordado lo suficiente.
-    
-    \item \textbf{Despliegue:} La construcción del modelo no es el final del proyecto. En función de los requerimientos, la fase de despliegue puede ser tan simple como la generación de un reporte o tan complejo como su respectiva implementación en otros proyectos de minería de datos.
-    
-\end{enumerate}
-
-
 \subsection{Minería de datos}
-Según \cite{datamining-1}, la minería de datos corresponde a un proceso que consiste en la extracción de información relevante a partir de un gran conjunto de datos, con el fin de encontrar patrones interesantes que sean de utilidad, los cuales de otro modo habrían pasado desapercibidos. De la misma manera, métodos tradicionales de análisis de datos son combinados con algoritmos capaces de manejar grandes volúmenes de datos \cite{datamining-2}.\\
-
-Entre sus principales funciones se destacan \cite{datamining-2}:
+Según \cite{datamining-1}, la minería de datos corresponde a un proceso que consiste en la extracción de información relevante a partir de un gran conjunto de datos, con el fin de encontrar patrones interesantes que sean de utilidad, los cuales de otro modo habrían pasado desapercibidos. De la misma manera, métodos tradicionales de análisis de datos son combinados con algoritmos capaces de manejar grandes volúmenes de datos \cite{datamining-2}. Entre sus principales funciones se destacan \cite{datamining-2}:
 \begin{enumerate}
 \item \textbf{Caracterización/Discriminación:} Sintetizar y explicar clases o conceptos.
 \item \textbf{Patrones frecuentes y asociaciones:} Reconocer relaciones que se repiten en el conjunto de datos.
@@ -335,8 +312,21 @@ Entre sus principales funciones se destacan \cite{datamining-2}:
 \item \textbf{Detección de valores atípicos:} Reconocer datos que no se ajustan a un patrón general.
 \end{enumerate}
 
+\subsection{Metodologías para minería de datos}
+En el contexto de la minería de datos, diversas metodologías han sido propuestas con el fin de dotar de estructura y sistematicidad a este proceso. Estas metodologías proveen fases bien definidas con el fin de asegurar la coherencia entre los objetivos del proyecto y los resultados. A continuación se detallan las tres metodologías más reconocidas en la literatura:
+
+\begin{enumerate}
+    \item \textbf{KDD (Knowledge Discovery in Databases)}\\
+    KDD fue el primer modelo en recibir aprobación por parte de la comunidad científica para dirigir proyectos cuyo propósito es la obtención de conocimiento a partir de grandes cantidades de datos \cite{moine2011estudio}. Esta metodología plantea un proceso iterativo que incluye la selección de datos, preprocesamiento, transformación, la implementación de algoritmos y el análisis de patrones. Entre sus contribuciones relevantes destaca la distinción de la minería de datos como una fase que forma parte de un proceso más amplio \cite{plotnikova2020adaptations}. A diferencia de otras metodologías posteriores, a KDD se le atribuye un enfoque fundamentalmente conceptual, debido a que establece de manera generalizada cada fase del descubrimiento de conocimiento, sin profundizarlas \cite{moine2011estudio}. KDD es visto como un punto de inicio para la sistematización de la minería de datos debido an esta característica, ya que proporcionó una base para el desarrollo de modelos más integrales que surgieron en años siguientes \cite{moine2011estudio}.
+    \item \textbf{CRISP-DM (Cross-Industry Standard Process for Data Mining)}\\
+    La metodología CRISP-DM, establecida en el año 2000, ha logrado consolidarse como la más utilizada para proyectos vinculados con la minería de datos \cite{moine2011estudio}. Comprende seis etapas: entendimiento del negocio, entendimiento de los datos, preparación de los datos, modelado, evaluación y despliegue. En este modelo se detalla claramente las tareas y actividades que se deben llevar a cabo en cada fase, lo que permite establecer una conexión entre los objetivos estratégicos y el análisis técnico, es gracias a este equilibrio que CRISP-DM se posiciona como un marco idóneo para proyectos académicos e industriales \cite{plotnikova2020adaptations}. Esta metodología admite retrocesos dentro de su flujo de trabajo, también permite realizar cambios en sus fases en función de los objetivos del proyecto, lo que refuerza su naturaleza iterativa y la hace muy flexible \cite{plotnikova2020adaptations}.
+    \item \textbf{SEMMA (Sample, Explore, Modify, Model, Assess)}\\
+    SEMMA es un modelo desarrollado por el instituto SAS, establece una guía metodológica que estructura un proceso en cinco fases: muestreo, exploración, modificación, modelado y evaluación \cite{moine2011estudio}. Cada fase está enfocada en los aspectos técnicos del tratamiento de datos y en la aplicación de algoritmos. A diferencia de CRISP-DM, SEMMA no contempla las fases de comprensión del negocio o despliegue, situándola como una metodología muy útil en la ejecución de tareas relativas al análisis de datos, pero ineficaz para tareas donde los objetivos de la organización son clave \cite{plotnikova2020adaptations}. Su utilidad se encuentra en proyectos en los que la experimentación y el modelado son más importantes que integrar el conocimiento adquirido dentro de los procesos comerciales \cite{plotnikova2020adaptations}.
+\end{enumerate}
+
+\clearpage
 \subsection{Proceso ETL}
-El proceso ETL (Extracción, Transformación y Carga), es una técnica crucial que sirve para obtener, organizar y usar los datos apropiadamente según el fin requerido, se enfoca principalmente en la unión de datos provenientes de diversas fuentes, así como de su evaluación y limpieza \cite{singu2022etl}. Tal y como sus siglas indican, este proceso involucra tres fases:
+El proceso ETL (Extracción, Transformación y Carga), es una técnica crucial que sirve para obtener, organizar y usar los datos apropiadamente según el fin requerido, se enfoca principalmente en la unión de datos provenientes de diversas fuentes, así como de su evaluación y limpieza \cite{singu2022etl}. Tal y como sus siglas indican, este proceso involucra tres fases descritas a continuación:
 
 \begin{enumerate}
     \item \textbf{Extracción}: Este paso es el responsable de extraer el conjunto requerido de datos de una o más fuentes, donde cada fuente  tiene sus propias características, por lo cual, se debe tener conocimiento sobre como acceder a dichas fuentes, comprender la estructura de las mismas y saber como manejar cada fuente de acuerdo a su naturaleza \cite{elsappagh2011proposed}. Este proceso termina cuando todo el conjunto de datos es consolidado en un solo repositorio \cite{elsappagh2011proposed}.
@@ -483,8 +473,52 @@ MongoDB & MongoDB es una base de datos no relacional basada en documentos, ofrec
 
 
 \chapter{Metodología}
-Describir el diseño o el planteamiento utilizado...
+\vspace{-0.5cm}
+\section{Caso de estudio}
+Unos de los grandes desafíos que enfrenta la Empresa Eléctrica Quito (EEQ) es la administracion eficiente de la demanda de sus clientes, especialmente la de aquel segmento que no está regulado, este grupo de clientes es estratégico debido a su representativo nivel de consumo y a la variablidad de sus patrones de carga. Estos usuarios, no están incluidos en un esquema tarifario regulado, por lo cual exhiben una gran diversidad en sus curvas de demanda. Esto obstaculiza enormemente la planificación energética y el diseño de estrategias destinadas a asegurar eficiencia y fiabilidad en el sistema eléctrico.\\
 
+Los métodos tradicionales que han sido utilizado en la EEQ con el fin de examinar el comportamiento de la demanda (basados principalmente en clasificaciones rígidas o en el cálculo de promedios), han demostrado importantes limitaciones al no conseguir captar la complejidad de los patrones de consumo. En investigaciones anteriores realizadas por Gerencia de Planificación, se ha confirmado esta circunstancia. Los estudios mostraron que el comportamiento energético está directamente relacionado con la actividad económica del cliente no regulado y a su curva de carga característica, lo cual hace inviable que un único criterio generalizado represente apropiadamente a todo este conjunto.\\
+
+En este contexto, es indispensable emplear un enfoque innovador que facilite la identificación de patrones de consumo representativos y que haga posible la segmentación de los clientes no regulados en función de su comportamiento energético real. Con este propósito, se plantea el presente componente que, a través de técnicas de aprendizaje no supervisado, produzca conjuntos homogéneos de clientes basándose en la forma de sus curvas anuales de carga.\\
+
+Esta solución proporciona un valor agregado debido a que permitirá a la EEQ comprender de mejor manera la diversidad de comportamientos respecto al consumo de los clientes no regulados, definir criterios técnicos más firmes para el manejo de la demanda y planificación de la red, y mejorar el proceso de toma de decisiones estratégicas relacionadas con las tarifas, políticas energéticas y expansión de infraestructura. En este sentido, el caso de estudio se basa en la necesidad de superar las limitaciones de métodos convencionales y avanzar hacia un proceso inteligente de segmentación, que se convierta en un recurso esencial para la planificación energética en la zona cubierta por la EEQ.\\
+
+\section{Brainstorming}
+La lluvia de ideas, también conocida como brainstorming, es un método que se emplea en el campo de la ingeniería de requisitos y la investigación para recopilar información de manera colaborativa. Esto facilita determinar necesidades, cuestiones problemáticas y posibles perspectivas de solución deurante las etapas iniciales de un proyecto. Su valor metodológico radica en su capacidad de permitir reunir un conjunto extenso de percepciones, las cuales pueden ser organizadas y analizadas con más rigor posteriormente, convirtiéndose así en un insumo fundamental para determinación del enfoque metodológico \cite{Weichbroth2016}.\\
+
+En relación con el desarrollo del presente componente, esta técnica se utilizó como método para recopilar información en reuniones con el equipo encargado del departamento de planificación de la demanda. Los métodos de análisis tradicionales, la disparidad de los perfiles de carga y la necesidad de contar con un mecanismo de segmentación que facilite la agrupar a los clientes según su comportamiento energético fueron determinados mediante este proceso.\\
+
+La relevancia del uso de brainstorming en este caso de estudio se explica por el hecho de que, siendo un problema técnico y organizacional complejo, fue imprescindible obtener directamente la exsperiencia y la sabiduría del personal de la compañía. De este modo, esta técnica hizo posible determinar las necesidades y los problemas más importantes vinculados al estudio del comportamiento energético de los clientes no regulados, lo cual permitió establecer un punto de partida claro para el desarrollo del proyecto.
+
+\section{CRISP-DM}\\
+El desarrollo del presente componente se sustenta en el Proceso Estándar Interindustrial para la Minería de Datos (CRISP-DM), metodología que es ampliamente reconocida por su aplicabilidad en proyectos de minería de datos y por brindar un enfoque sistemático y estructurado.\\
+
+La elección de esta metodología se basa en la necesidad de guiar de manera ordenada el análisis del consumo energético de los clientes no regulados del sector eléctrico, y esta opción es la que más se acopla debido a que nos permite avanzar desde la comprensión del problema hasta la obtención de resultados comparables. Además, la metodología CRISP-DM brinda la flexibilidad necesaria para realizar ajustes en sus fases en función de los objetivos que se quieran cumplir, esta característica fue clave para su elección, pues en el presente componente la fase final no contemplará un despliegue productivo como tal, sino una evaluación comparativa de la calidad de agrupaciones obtenidas por cada algoritmo.\\
+
+La validez del uso de CRISP-DM para el desarrollo del presente componente es respaldada por su probado éxito en estudios anteriores similares a este. Sarnovsky y Bednár aplicaron en \cite{sarnovsky2025} esta metodología para realizar clustering de clientes de una empresa distribuidora de energía, donde estos fueron agrupados en función de sus curvas de carga anuales. De manera similar, Otieno adoptó CRISP-DM en \cite{otieno2021} como base para desarrollar diversos análisis de patrones de consumo en una empresa distribuidora de energía. Incluso en otros sectores, como el de software, investigaciones como la presentada en \cite{ijiepr2021} emplean CRISP-DM para estructurar procesos de clustering de clientes basados en técnicas de minería de datos. Estos antecedentes proporcionan una evidencia sólida y específica que valida la elección de CRISP-DM como metodología para el desarrollo del presente componente.\\
+
+CRISP-DM, cuyas siglas corresponden a Cross-Industry Standard Process for Data Mining, es un método probado utilizado para orientar proyectos de minería de datos. Ofrece una serie de fases que resúmen el ciclo vital de minería de datos, a la vez que incluye descripciones y tareas necesarias en cada fase, ayudando a estructurar un flujo de trabajo ordenado cuya secuencia no es estricta, donde se puede avanzar y retroceder entre fases de ser necesario \cite{crisp-dm1}.\\
+
+El modelo CRISP-DM es sumamente flexible, y sus fases pueden ser personalizadas en función de los objetivos del proyecto, pudiendo crear un modelo de minería de datos que se adapte a necesidades concretas \cite{crisp-dm1}. CRISP-DM contiene un total de seis fases, tal y como se describe en \cite{crisp-dm2}:
+
+\begin{enumerate}
+    \item \textbf{Comprensión del negocio:} Esta fase inicial se enfoca en analizar y comprender tanto los objetivos como los requerimientos del proyecto desde la perspectiva del negocio. Posteriormente todo este conocimiento es plasmado en un proyecto de minería de datos enfocado en alcanzar los objetivos.
+    
+    \item \textbf{Comprensión de los datos:} La fase de comprensión de datos tiene como principal objetivo la 'familiarización' con los datos. Para lograr esto se realiza una recolección inicial de los datos y se procede a realizar un pequeño análisis exploratorio de los datos con el fin de comprender los datos que se tienen e identificar problemas con la calidad de los mismos.
+    
+    \item \textbf{Preparación de los datos:} Esta fase es crucial en CRISP-DM, debido a que abarca todas las actividades requeridas hasta la construcción final del conjunto de datos, los cuales servirán posteriormente para la fase de modelado. Esta fase incluye tareas como la limpieza, transformación y normalización de los datos, con el fin de asegurar la calidad de estos.
+    
+    \item \textbf{Modelado:} Varias herramientas de modelamiento son seleccionadas con el fin de ser aplicadas sobre nuestro conjunto de datos preparados. Los parámetros de dichas herramientas deben ser calibrados hasta obtener los valores óptimos que ofrezcan los mejores resultados.
+    
+    \item \textbf{Evaluación:} En esta penúltima fase del proyecto, ya se tiene construido uno o varios modelos que aparentemente ofrecen resultados de calidad. Antes de proceder a la fase del despliegue, se realiza una evaluación del modelo, revisando cada paso ejecutado hasta la construcción final del mismo con el fin de determinar si existe algún objetivo que no haya sido abordado lo suficiente.
+    
+    \item \textbf{Despliegue:} La construcción del modelo no es el final del proyecto. En función de los requerimientos, la fase de despliegue puede ser tan simple como la generación de un reporte o tan complejo como su respectiva implementación en otros proyectos de minería de datos.
+    
+\end{enumerate}
+
+Es importante recalcar que, en el desarrollo del presente componente, la fase número seis de CRISP-DM correspondiente al despliegue fue modificada en función de los objetivos específicos del proyecto. En este caso, a diferencia de la metodología original, que incluye en esta fase la implementación del modelo en un entorno productivo, en este caso, esta fase tendrá un enfoque comparativo de los resultados obtenidos con los distintos algoritmos de clustering. Para ello, las agrupaciones fueron analizadas mediante el uso de métricas de evaluación que permiten cuantificar la calidad de los clústeres, con la finalidad de elegir aquellos resultados que brinden una segmentación más coherente y homogénea. Esta adaptación fue posible gracias a la flexibilidad que caracteriza a CRISP-DM, como se mencionó antes, lo que hace posible la modificación de sus estapas en base a los requerimientos específicos del proyecto, sin perder la consistencia metodoloógica y asegurando la validez del proceso ejecutado.\\
+
+\section{Implementación de CRISP-DM}
 \subsection{Flujo de trabajo propuesto}
 
 \begin{itemize}
