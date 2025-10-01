@@ -61,6 +61,7 @@
 
 \begin{document}
 
+\renewcommand{\tablename}{Tabla}
 \renewcommand{\figurename}{Figura}
 
 \pagenumbering{gobble} % ELIMINA NUMERACION EN PORTADA
@@ -239,15 +240,15 @@ The results of each algorithm are evaluated using various metrics that quantify 
 \chapter{DESCRIPCIÓN DEL COMPONENTE DESARROLLADO}
 
 
-En el contexto actual de las empresas distribuidoras de energía, como la Empresa Eléctrica Quito (EEQ), la eficiente gestión energética es uno de los principales desafíos a enfrentar. Diversos factores como la diversificación en los hábitos de consumo y variablidad de la demanda dificultan la planificación y diseño de estrategias eficientes que permitan responder de manera adecuada. Los métodos tradicionales de análisis, que se basan en promedios o clasificaciones rígidas resultan insuficientes para capturar dicha complejidad en los patrones de consumo de los clientes, dificultando el diseño de una planificación energética eficiente.\\
+En el contexto actual de las empresas proveedoras de energía, como la Empresa Eléctrica Quito (EEQ), la eficiente gestión energética es uno de los principales desafíos a enfrentar. Múltiples factores como la diversificación en los hábitos de consumo y variablidad de la demanda dificultan la planificación y diseño de estrategias eficientes que permitan responder de manera adecuada. Los métodos tradicionales de análisis, que se basan en promedios o clasificaciones rígidas resultan insuficientes para capturar dicha complejidad en los patrones de consumo de los clientes, dificultando el diseño de una planificación energética eficiente.\\
 
-El análisis del consumo energético es un aspecto fundamental para la optimización de recursos en sectores como la distribución eléctrica y la gestión de tarifas, debido a esto, identificar patrones de consumo permite segmentar a los clientes en función de su comportamiento energético, lo cual facilita la toma de decisiones estratégicas, garantizando así una planificación energética eficiente.\\
+Con el fin de optimizar la distribución de recursos en áreas como la gestión tarifaria y la distribución eléctrica, es fundamental analizar los patrones de consumo. La identificación de estos patrones en el comportamiento energético de los clientes brinda la posibilidad de definir segmentos con características similares, permitiendo a las compañías proveedoras de energía establecer una base más firme para la toma de decisiones.\\
 
-Ante esta problemática, se ha desarrollado un componente orientado a la segmentación inteligente de clientes, implementando un proyecto de minería de datos que propone un enfoque basado en técnicas de aprendizaje no supervisado para la segmentación de clientes en función de la forma de su curva característica anual de consumo energético. El objetivo principal es identificar patrones de consumo que permitan una planificación más eficiente y optimización del uso de la energía en el sector eléctrico.\\
+Ante esta problemática, se ha desarrollado un componente orientado a la segmentación inteligente de clientes, implementando un proyecto de minería de datos que propone un enfoque basado en técnicas de aprendizaje no supervisado con el fin de generar grupos homogéneos en función de la forma de su curva característica anual de consumo energético. El objetivo principal es identificar patrones de consumo que permitan una planificación más eficiente y optimización del uso de la energía en el sector eléctrico.\\
 
 Bajo este contexto, el desarrollo del componente es realizado bajo la metodología CRISP-DM, con una ligera modificación en su fase final. Mientras que en la metodología original la fase final se centra en la implementación y despliegue del modelo, en este caso, el objetivo final es, entre todas las agrupaciones dadas por los diferentes algoritmos, escoger aquella que tenga la mejor calidad y homogeneidad, basándose en métricas de evaluación. Esta modificación de la fase final es posible debido a que CRISP-DM es sumamente flexible, y permite personalizar sus fases en función de los objetivos del proyecto.\\ 
 
-Dentro del flujo de trabajo estructurado que propone la metodología CRISP-DM, se han definido dos procesos claves: en primer lugar, se lleva a cabo un proceso de Extracción, Transformación y Carga (ETL), orquestado por Apache Airflow, para consolidar los datos de consumo mensual de cada cliente en una curva representativa anual. Este proceso asegura la correcta integración, transformación y normalización de los datos para que las curvas representativas sean comparables entre sí.\\
+Dentro del flujo de trabajo estructurado que propone la metodología CRISP-DM, se han definido dos procesos claves: en primer lugar, se lleva a cabo un proceso de Extracción, Transformación y Carga (ETL), orquestado por Apache Airflow, para normalizar y consolidar los datos de consumo mensual de cada cliente en una curva representativa anual.\\
 
 Posteriormente, se desarrolla el proceso de agrupación, donde se determina el número óptimo de grupos de clientes a través de un análisis conjunto con las partes interesadas y el uso de métodos de validación como el método del codo. Se implementan y optimizan diferentes algoritmos de clustering, como KMeans, GaussianMixture, Birch y Spectral Clustering, para segmentar a los clientes en base a la similitud de sus curvas de consumo. Finalmente, se evalúan los resultados de cada algoritmo utilizando diversas métricas, como Silhouette Score, SSE, Davies-Bouldin Index y Calinski-Harabasz Index, para seleccionar el algoritmo que ofrezca las mejores agrupaciones. Los resultados obtenidos serán presentados tanto de manera visual como cuantitativa, permitiendo una interpretación clara y precisa de las agrupaciones logradas.
 
@@ -259,7 +260,7 @@ Evaluar e implementar modelos de aprendizaje no supervisado para la segmentació
 
 \begin{enumerate}
     \item Levantar requerimientos para la obtención y procesamiento de los datos de consumo energético de los clientes no regulados, transformándolos en curvas de carga representativas para su almacenamiento en una base de datos.
-    \item Realizar una revisión literaria de los algoritmos de agrupamientomásrelevantes, identificando su funcionamiento, principios y parámetros claves para su correcta optimización e implementación en la segmentación de clientes del sector eléctrico.
+    \item Realizar una revisión literaria de los algoritmos de agrupamiento más relevantes, identificando su funcionamiento, principios y parámetros claves para su correcta optimización e implementación en la segmentación de clientes del sector eléctrico.
     \item Implementar una metodología de análisis de datos para la ejecución del proceso sistemático encargado de guiar las diferentes fases.
     \item Aplicar los algoritmos de clustering, utilizando métodos de validación para definir el número óptimo de agrupaciones.
     \item Evaluar y presentar los resultados generados por cada algoritmo, utilizando visualizaciones detalladas de las curvas de carga agrupadas.
@@ -271,8 +272,8 @@ Como se mencionó en la descripción del componente, el presente trabajo está e
 
 \begin{enumerate}
     \item Se ha adoptado la metodología CRISP-DM como marco de referencia, con una adaptación en su fase final. Dicha fase implica originalmente el despliegue del modelo en un entorno productivo, pero en este trabajo va a enfocarse en la evaluación comparativa de los resultados obtenidos con diferentes algoritmos de clustering, donde se presentarán métricas cuantitativas así como visualizaciones interpretativas de las agrupaciones.
-    \item Se llevará a cabo un proceso ETL (Extracción, Transformación y Carga), el cual obtiene, integra, limpia y normaliza los registros históricos de consumo energético que se tienen de cada cliente, con la finalidad de generar curvas de carga que representen el comportamiento energético de cada cliente. Este proceso contempla la interpolación de valores nulos, la exclusión de días no laborales, corrección de formatos inconsistentes y la normalización mediante técnicas de escalamiento.
-    \item Se realizará la optimización e implementación de varios algoritmos de clustering (KMeans, GaussianMixture, Birch y Spectral Clustering), estos fueron seleccionados en función de su relevancia en la literatura y su aplicabilidad en el análisis de análisis de curvas de carga. Para determinar el número óptimo de agrupaciones se hara uso de métodos de validación como el método del codo. Por otro lado, para la optimización de estos algoritmos se utilizará la correlación intra-cluster, esta métrica es la más adecuada pues captura de mejor manera la similitud en forma de las curvas agrupadas.
+    \item Se llevará a cabo un proceso ETL, el cual obtiene, integra, limpia y normaliza los registros históricos de consumo energético que se tienen de cada cliente, con la finalidad de generar curvas de carga que representen el comportamiento energético de cada cliente. Este proceso contempla la interpolación de valores nulos, la exclusión de días no laborales, corrección de formatos inconsistentes y la normalización mediante técnicas de escalamiento.
+    \item Se realizará la optimización e implementación de varios algoritmos de clustering (KMeans, GaussianMixture, Birch y Spectral Clustering), los cuales serán seleccionados en función de su relevancia en la literatura y su aplicabilidad en el análisis de análisis de curvas de carga. Para determinar el número óptimo de agrupaciones se hará uso de métodos de validación como el método del codo. Por otro lado, para la optimización de estos algoritmos se utilizará la correlación intra-cluster, esta métrica es la más adecuada pues captura de mejor manera la similitud en forma de las curvas agrupadas.
     \item Los resultados incluirán la curva de carga representativa de cada cliente, la curva de carga correspondiente al día de máxima demanda, archivos .csv con las coordenadas de dichas curvas. Asimismo, se presentarán resultados visuales de los clústeres y una tabla comparativa con métricas que cuantifican la calidad de las agrupaciones generadas por cada algoritmo.
     \item Para el desarrollo del presente componente se ha contemplado Python como lenguaje de programación de alto nivel, Visual Studio Code como entorno de desarrollo integrado, bibliotecas especializadas en análisis de datos y machine learning (pandas, scikit-learn, numpy, matplotlib, entre otras), así como herramientas de orquestación, en este caso Apache Airflow sobre Docker, para la automatización del proceso ETL.
 \end{enumerate}
@@ -286,21 +287,22 @@ Por lo anterior expuesto el alcance del componente se limita a la construcción,
 Para comprender este trabajo y su contexto, es de gran importancia tener bases sólidas sobre los principios subyacentes que sustentan el análisis y agrupación de los clientes en función de su curva de carga. Los apartados siguientes explicarán conceptos claves dentro del desarrollo del presente componente.
 
 \subsection{Sobre el sector eléctrico}\\
-\subsubsection{Clientes no regulados}\\
-Los clientes no regulados en el sector eléctrico son aquellos cuya facturación por el suministro de energía se rige estrictamente por un contrato a término, el cual es realizado entre la empresa que suministra la energía y la empresa que recibe dicha energía. Los contratos mencionados anteriormente son bilaterales\cite{conelec2012}.\\
+\begin{enumerate}
+\item{\textbf{Clientes no regulados}}\\
+Los clientes no regulados en el sector eléctrico son aquellos cuya facturación por el suministro de energía se rige estrictamente por un contrato a término, el cual es realizado entre la empresa que suministra la energía y la empresa que recibe dicha energía. Los contratos mencionados anteriormente son bilaterales\cite{conelec2012}.
 
 Debido a la naturaleza de los contratos que se suscriben con este tipo de clientes, los patrones de consumo de energía que poseen son bastantes variados respecto a los clientes regulados \cite{conelec2012}.
 
 
-\subsubsection{Curvas típicas (curva de carga)}\\
-Una curva de carga o también llamada curva típica es un registro gráfico que indica la demanda eléctrica que ha tenido un cliente en cada instante durante un intervalo de tiempo determinado\cite{curva_carga_1}.\\
+\item{\textbf{Curvas típicas (curva de carga)}}\\
+Una curva de carga o también llamada curva típica es un registro gráfico que indica la demanda eléctrica que ha tenido un cliente en cada instante durante un intervalo de tiempo determinado\cite{curva_carga_1}.
 
 Estas curvas de carga reflejan el patrón de consumo cotidiano que poseen los clientes, dicho patrón está directamente relacionado con las máquinas o aparatos que utilizan, así como la energía que consumen durante sus actividades\cite{curva_carga_2}.
 
-
-\subsubsection{Importancia de segmentar a los clientes}\\
-
+\clearpage
+\item{\textbf{Segmentación de clientes}}\\
 Debido a la naturaleza de los clientes no regulados y, agregando el hecho de que en su mayoría son grandes clientes, segmentarlos en grupos homogéneos permite optimizar la gestión de la demanda y mejorar la planificación del suministro eléctrico. Al agrupar clientes con patrones de consumo similares, es posible diseñar estrategias más eficientes para la contratación de energía, desarrollar y optimizar modelos tarifarios y, mejorar la predicción de la demanda a futuro \cite{curva_carga_1}. Además, esta segmentación ayuda a evitar el sobredimensionamiento o subdimensionamiento de la capacidad de generación y distribución, garantizando un uso más eficiente de los recursos y optimizando los costos operativos.
+\end{enumerate}
 
 \subsection{Minería de datos}
 Según \cite{datamining-1}, la minería de datos corresponde a un proceso que consiste en la extracción de información relevante a partir de un gran conjunto de datos, con el fin de encontrar patrones interesantes que sean de utilidad, los cuales de otro modo habrían pasado desapercibidos. De la misma manera, métodos tradicionales de análisis de datos son combinados con algoritmos capaces de manejar grandes volúmenes de datos \cite{datamining-2}. Entre sus principales funciones se destacan \cite{datamining-2}:
@@ -312,7 +314,6 @@ Según \cite{datamining-1}, la minería de datos corresponde a un proceso que co
 \item \textbf{Detección de valores atípicos:} Reconocer datos que no se ajustan a un patrón general.
 \end{enumerate}
 
-\subsection{Metodologías para minería de datos}
 En el contexto de la minería de datos, diversas metodologías han sido propuestas con el fin de dotar de estructura y sistematicidad a este proceso. Estas metodologías proveen fases bien definidas con el fin de asegurar la coherencia entre los objetivos del proyecto y los resultados. A continuación se detallan las tres metodologías más reconocidas en la literatura:
 
 \begin{enumerate}
@@ -326,7 +327,7 @@ En el contexto de la minería de datos, diversas metodologías han sido propuest
 
 \clearpage
 \subsection{Proceso ETL}
-El proceso ETL (Extracción, Transformación y Carga), es una técnica crucial que sirve para obtener, organizar y usar los datos apropiadamente según el fin requerido, se enfoca principalmente en la unión de datos provenientes de diversas fuentes, así como de su evaluación y limpieza \cite{singu2022etl}. Tal y como sus siglas indican, este proceso involucra tres fases descritas a continuación:
+El proceso ETL, es una técnica crucial que sirve para obtener, organizar y usar los datos apropiadamente según el fin requerido, se enfoca principalmente en la unión de datos provenientes de diversas fuentes, así como de su evaluación y limpieza \cite{singu2022etl}. Tal y como sus siglas indican, este proceso involucra tres fases descritas a continuación:
 
 \begin{enumerate}
     \item \textbf{Extracción}: Este paso es el responsable de extraer el conjunto requerido de datos de una o más fuentes, donde cada fuente  tiene sus propias características, por lo cual, se debe tener conocimiento sobre como acceder a dichas fuentes, comprender la estructura de las mismas y saber como manejar cada fuente de acuerdo a su naturaleza \cite{elsappagh2011proposed}. Este proceso termina cuando todo el conjunto de datos es consolidado en un solo repositorio \cite{elsappagh2011proposed}.
@@ -335,17 +336,18 @@ El proceso ETL (Extracción, Transformación y Carga), es una técnica crucial q
 \end{enumerate}
 
 \subsection{Aprendizaje no supervisado}
-El aprendizaje no supervisado es un tipo de algoritmo de aprendizaje automático, utiliza únicamente datos sin etiquetar, y es usado sobre estos con el objetivo de descubrir patrones o agrupar datos que posiblemente comparten características similares entre sí \cite{Wang2022_unsupervised_machine_learning_urban_studies}.
+El aprendizaje no supervisado es un tipo de algoritmo de aprendizaje automático, utiliza únicamente datos sin etiquetar, y es usado sobre estos con el objetivo de descubrir patrones o agrupar datos que posiblemente comparten características similares entre sí \cite{Wang2022_unsupervised_machine_learning_urban_studies}. En este contexto, es pertinente destacar algunos elementos clave que permitirán una mejor comprensión, tales como:
 
-\subsubsection{Clustering}
+\begin{enumerate}
+\item\textbf{Clustering}\\
 Es una de las categorías del aprendizaje no supervisado, la más consolidada en la actualidad, su objetivo es la identificación de subgrupos dentro de un conjunto extenso de datos no procesados, estos subgrupos son encontrados mediante la diferenciación de características \cite{Wang2022_unsupervised_machine_learning_urban_studies}.
-\subsubsection{Número de agrupaciones}
+\item\textbf{Número de agrupaciones}\\
 Un problema muy común al utilizar algoritmos de aprendizaje no supervisado es elegir el número de agrupaciones deseadas \cite{CoraggioCoretto2021_clusters_quadratic_discriminant_score}, esta elección es muy importante debido a que puede alterar la calidad de las agrupaciones finales dadas por los algoritmos. Como se menciona en \cite{Lezhnina2022_latent_class_cluster_analysis}, esta elección puede ser totalmente subjetiva, y en la mayoría de los casos el números de agrupaciones es seleccionado en función de criterios preestablecidos, sin embargo, existen técnicas como el método del codo que ayudan a validar el número de agrupaciones y que pueden ayudar en la selección de este critero.
-\subsubsection{Metodo del codo}
+\item\textbf{Método del codo}\\
 Es la forma más habitual de elegir o validar el número de clústeres, este método consiste en ajustar varios modelos K-means para un rango específico de agrupaciones, normalmente desde 1 hasta un número arbitrario máximo, posteriormente se traza un gráfico que contiene el valor total de la suma de los cuadrados por cada número de clústeres frente a ese respectivo número de clústeres \cite{Friedman2017_survey_R_packages_cluster_analysis}. El objetivo es encontrar aquel valor de número de clústeres donde la gráfica muestra un 'codo' y elegir dicho valor que probablemente nos ofrezca grupos bien separados \cite{Friedman2017_survey_R_packages_cluster_analysis}.
 
-\subsubsection{Algoritmos de clustering}
-Los algoritmos de clustering son una parte fundamental del aprendizaje no supervisado, pues facilitan el descubrimiento de estructuras y patrones ocultos dentro de un conjunto de datos sin etiquetar \cite{wani2024comprehensive}.\\
+\item\textbf{Algoritmos de clustering}\\
+Los algoritmos de clustering son una parte fundamental del aprendizaje no supervisado, pues facilitan el descubrimiento de estructuras y patrones ocultos dentro de un conjunto de datos sin etiquetar \cite{wani2024comprehensive}.
 
 A continuación se describirán los algoritmos de clustering que van a ser utilizados para el desarrollo del presente componente: 
 
@@ -413,19 +415,19 @@ A continuación se describirán los algoritmos de clustering que van a ser utili
     \min_T \; g(W_k(T), B_k(T))
     \end{equation}}
     
-    donde $W_k$ mide la compacidad intra-clúster y $B_k$ la separación inter-clúster \cite{fontanini2018birch}.
+    donde $W_k$ mide compacidad intra-clúster y $B_k$ separación inter-clúster \cite{fontanini2018birch}.
 
 \end{enumerate}
 
+\clearpage
+\item\textbf{Hiperparametrización de algoritmos}\\
+Técnica que consiste en ajustar los parámetros que controlan el comportamiento de los algoritmos de clustering, estos parámetros influyen en la calidad de las agrupaciones finales, el objetivo es encontrar aquella combinación de parámetros que ofrezca los mejores resultados en cada algoritmo \cite{pathak2024randomized}. 
 
-
-\subsubsection{Hiperparametrización de algoritmos}
-Es una técnica que consiste en ajustar los parámetros que controlan el comportamiento de los algoritmos de clustering, estos parámetros influyen directamente en la calidad de las agrupaciones finales, el objetivo es encontrar aquella combinación de parámetros que ofrezca los mejores resultados en cada algoritmo \cite{pathak2024randomized}. 
-
-\subsection{Métricas de evaluación de agrupaciones}
+\item\textbf{Métricas de evaluación de agrupaciones}\\
 Son medidas de calidad que sirven para dar validación a los clústeres obtenidos por los algoritmos, estas métricas se basan en la premisa de 'Maximizar la similitud dentro de cada clúster y minimizar la similitud entre los diferentes clústeres', el objetivo es lograr clústeres compactos y lo más separados posibles entre sí \cite{heras2023tfg}.
+\end{enumerate}
 
-\vspace{-0.025cm}
+\vspace{-0.45cm}
 
 \subsection{Herramientas utilizadas}
 Para el desarrollo del componente se han considerado varias herramientas que facilitan las etapas de procesamiento, almacenamiento, análisis de los datos, e implementación de los modelos de clustering, la Tabla \ref{tab:herramientas} los detalla:
@@ -441,7 +443,7 @@ Para el desarrollo del componente se han considerado varias herramientas que fac
 \endfirsthead
 
 \hline
-\textbf{Herramienta} & \textbf{Descripción y función en la tesis} \\
+\textbf{Herramienta} & \textbf{Descripción de la herramienta} \\
 \hline
 \endhead
 
@@ -451,15 +453,15 @@ Para el desarrollo del componente se han considerado varias herramientas que fac
 \hline
 \endlastfoot
 
-Airflow & Apache Airflow es una plataforma de código abierto que permite el desarrollo, programación y supervisión flujos de trabajo, utiliza Python, lo que le permite conectarse con diversas tecnologías \cite{airflow_docs}. \\ \hline
+Airflow 2.10.5 & Apache Airflow es una plataforma de código abierto que permite el desarrollo, programación y supervisión flujos de trabajo, utiliza Python, lo que le permite conectarse con diversas tecnologías \cite{airflow_docs}. \\ \hline
 
-Docker & Docker es una plataforma abierta utilizada para el desarrollo, envío y ejecución de aplicaciones, permite empaquetar y ejecutar aplicaciones en un entorno aislado denominado contenedor \cite{docker_docs}. \\ \hline
+Docker 4.43.1 & Docker es una plataforma abierta utilizada para el desarrollo, envío y ejecución de aplicaciones, permite empaquetar y ejecutar aplicaciones en un entorno aislado denominado contenedor \cite{docker_docs}. \\ \hline
 
-Python & Python es un lenguaje de programación de alto nivel con naturaleza interpretada, maneja estructuras de datos con un alto nivel de eficiencia y ofrece una sintaxis simple, razones por las cuales es ampliamente utilizado en campos como desarrollo web, ciencia de datos, automatización, entre otros \cite{python_docs}. \\ \hline
+Python 3.13 & Python es un lenguaje de programación de alto nivel con naturaleza interpretada, maneja estructuras de datos con un alto nivel de eficiencia y ofrece una sintaxis simple, razones por las cuales es ampliamente utilizado en campos como desarrollo web, ciencia de datos, automatización, entre otros \cite{python_docs}. \\ \hline
 
-Visual Studio Code & Visual Studio Code es un editor de código fuente que contiene herramientas de depuración, control de versiones y extensiones para varios lenguajes. Ofrece varias características que permiten desarrollar código eficientemente \cite{vscode_docs}.\\ \hline
+Visual Studio Code 1.101.2 & Visual Studio Code es un editor de código fuente que contiene herramientas de depuración, control de versiones y extensiones para varios lenguajes. Ofrece varias características que permiten desarrollar código eficientemente \cite{vscode_docs}.\\ \hline
 
-MongoDB & MongoDB es una base de datos no relacional basada en documentos, ofrece una gran escalabilidad y flexibilidad, además de un modelo avanzado de consultas e indexación \cite{mongodb_docs}.\\
+MongoDB Atlas 8.0.13 & Es una base de datos no relacional administrada en nube, basada en documentos, y que brinda una gran escalabilidad y flexibilidad, además de un modelo avanzado de consultas e indexación \cite{mongodb_docs}.\\
 \hline
 
 \end{longtable}
@@ -479,25 +481,21 @@ Unos de los grandes desafíos que enfrenta la Empresa Eléctrica Quito (EEQ) es 
 
 Los métodos tradicionales que han sido utilizado en la EEQ con el fin de examinar el comportamiento de la demanda (basados principalmente en clasificaciones rígidas o en el cálculo de promedios), han demostrado importantes limitaciones al no conseguir captar la complejidad de los patrones de consumo. En investigaciones anteriores realizadas por Gerencia de Planificación, se ha confirmado esta circunstancia. Los estudios mostraron que el comportamiento energético está directamente relacionado con la actividad económica del cliente no regulado y a su curva de carga característica, lo cual hace inviable que un único criterio generalizado represente apropiadamente a todo este conjunto.\\
 
-En este contexto, es indispensable emplear un enfoque innovador que facilite la identificación de patrones de consumo representativos y que haga posible la segmentación de los clientes no regulados en función de su comportamiento energético real. Con este propósito, se plantea el presente componente que, a través de técnicas de aprendizaje no supervisado, produzca conjuntos homogéneos de clientes basándose en la forma de sus curvas anuales de carga.\\
-
-Esta solución proporciona un valor agregado debido a que permitirá a la EEQ comprender de mejor manera la diversidad de comportamientos respecto al consumo de los clientes no regulados, definir criterios técnicos más firmes para el manejo de la demanda y planificación de la red, y mejorar el proceso de toma de decisiones estratégicas relacionadas con las tarifas, políticas energéticas y expansión de infraestructura. En este sentido, el caso de estudio se basa en la necesidad de superar las limitaciones de métodos convencionales y avanzar hacia un proceso inteligente de segmentación, que se convierta en un recurso esencial para la planificación energética en la zona cubierta por la EEQ.\\
-
 \section{Brainstorming}
 La lluvia de ideas, también conocida como brainstorming, es un método que se emplea en el campo de la ingeniería de requisitos y la investigación para recopilar información de manera colaborativa. Esto facilita determinar necesidades, cuestiones problemáticas y posibles perspectivas de solución deurante las etapas iniciales de un proyecto. Su valor metodológico radica en su capacidad de permitir reunir un conjunto extenso de percepciones, las cuales pueden ser organizadas y analizadas con más rigor posteriormente, convirtiéndose así en un insumo fundamental para determinación del enfoque metodológico \cite{Weichbroth2016}.\\
 
 En relación con el desarrollo del presente componente, esta técnica se utilizó como método para recopilar información en reuniones con el equipo encargado del departamento de planificación de la demanda. Los métodos de análisis tradicionales, la disparidad de los perfiles de carga y la necesidad de contar con un mecanismo de segmentación que facilite la agrupar a los clientes según su comportamiento energético fueron determinados mediante este proceso.\\
 
-La relevancia del uso de brainstorming en este caso de estudio se explica por el hecho de que, siendo un problema técnico y organizacional complejo, fue imprescindible obtener directamente la exsperiencia y la sabiduría del personal de la compañía. De este modo, esta técnica hizo posible determinar las necesidades y los problemas más importantes vinculados al estudio del comportamiento energético de los clientes no regulados, lo cual permitió establecer un punto de partida claro para el desarrollo del proyecto.
+La relevancia del uso de brainstorming en este caso de estudio se explica por el hecho de que, siendo un problema técnico y organizacional complejo, fue imprescindible obtener directamente la experiencia y la sabiduría del personal de la compañía. De este modo, esta técnica hizo posible determinar las necesidades y los problemas más importantes vinculados al estudio del comportamiento energético de los clientes no regulados, lo cual permitió establecer un punto de partida claro para el desarrollo del proyecto.
 
 \section{CRISP-DM}\\
-El desarrollo del presente componente se sustenta en el Proceso Estándar Interindustrial para la Minería de Datos (CRISP-DM), metodología que es ampliamente reconocida por su aplicabilidad en proyectos de minería de datos y por brindar un enfoque sistemático y estructurado.\\
+El desarrollo del presente componente se sustenta en CRISP-DM, cuyas siglas corresponden a Cross-Industry Standard Process for Data Mining, metodología que es ampliamente reconocida por su aplicabilidad en proyectos de minería de datos y por brindar un enfoque sistemático y estructurado.\\
 
 La elección de esta metodología se basa en la necesidad de guiar de manera ordenada el análisis del consumo energético de los clientes no regulados del sector eléctrico, y esta opción es la que más se acopla debido a que nos permite avanzar desde la comprensión del problema hasta la obtención de resultados comparables. Además, la metodología CRISP-DM brinda la flexibilidad necesaria para realizar ajustes en sus fases en función de los objetivos que se quieran cumplir, esta característica fue clave para su elección, pues en el presente componente la fase final no contemplará un despliegue productivo como tal, sino una evaluación comparativa de la calidad de agrupaciones obtenidas por cada algoritmo.\\
 
 La validez del uso de CRISP-DM para el desarrollo del presente componente es respaldada por su probado éxito en estudios anteriores similares a este. Sarnovsky y Bednár aplicaron en \cite{sarnovsky2025} esta metodología para realizar clustering de clientes de una empresa distribuidora de energía, donde estos fueron agrupados en función de sus curvas de carga anuales. De manera similar, Otieno adoptó CRISP-DM en \cite{otieno2021} como base para desarrollar diversos análisis de patrones de consumo en una empresa distribuidora de energía. Incluso en otros sectores, como el de software, investigaciones como la presentada en \cite{ijiepr2021} emplean CRISP-DM para estructurar procesos de clustering de clientes basados en técnicas de minería de datos. Estos antecedentes proporcionan una evidencia sólida y específica que valida la elección de CRISP-DM como metodología para el desarrollo del presente componente.\\
 
-CRISP-DM, cuyas siglas corresponden a Cross-Industry Standard Process for Data Mining, es un método probado utilizado para orientar proyectos de minería de datos. Ofrece una serie de fases que resúmen el ciclo vital de minería de datos, a la vez que incluye descripciones y tareas necesarias en cada fase, ayudando a estructurar un flujo de trabajo ordenado cuya secuencia no es estricta, donde se puede avanzar y retroceder entre fases de ser necesario \cite{crisp-dm1}.\\
+CRISP-DM es un método probado utilizado para orientar proyectos de minería de datos. Ofrece una serie de fases que resúmen el ciclo vital de minería de datos, a la vez que incluye descripciones y tareas necesarias en cada fase, ayudando a estructurar un flujo de trabajo ordenado cuya secuencia no es estricta, donde se puede avanzar y retroceder entre fases de ser necesario \cite{crisp-dm1}.\\
 
 El modelo CRISP-DM es sumamente flexible, y sus fases pueden ser personalizadas en función de los objetivos del proyecto, pudiendo crear un modelo de minería de datos que se adapte a necesidades concretas \cite{crisp-dm1}. CRISP-DM contiene un total de seis fases, tal y como se describe en \cite{crisp-dm2}:
 
@@ -565,6 +563,11 @@ El segundo proceso comprende todo el proceso de agrupamiento, en este apartado s
 Los datos utilizados para el presente componente comprenden todas las mediciones mensuales del año 2024 por cada cliente, las cuales han sido obtenidos de la página de telemediciones de la Empresa Eléctrica de Quito.\\
     
 Por otro lado, la segmentación de clientes se realiza exclusivamente en función de la forma de su curva característica anual, obtenida al final del proceso ETL descrito en la \autoref{fig:fig1}. No se consideran otros factores, como las tarifas o la geolocalización, ya que el objetivo de la parte interesada es agrupar a los clientes estrictamente según el patrón de consumo de energía reflejado en su curva característica anual.\\
+
+\textbf{PARRAFOS HUERFANOS, INCLUIR TALVEZ EN CRISP DM}
+En este contexto, es indispensable emplear un enfoque innovador que facilite la identificación de patrones de consumo representativos y que haga posible la segmentación de los clientes no regulados en función de su comportamiento energético real. Con este propósito, se plantea el presente componente que, a través de técnicas de aprendizaje no supervisado, produzca conjuntos homogéneos de clientes basándose en la forma de sus curvas anuales de carga.\\
+
+Esta solución proporciona un valor agregado debido a que permitirá a la EEQ comprender de mejor manera la diversidad de comportamientos respecto al consumo de los clientes no regulados, definir criterios técnicos más firmes para el manejo de la demanda y planificación de la red, y mejorar el proceso de toma de decisiones estratégicas relacionadas con las tarifas, políticas energéticas y expansión de infraestructura. En este sentido, el caso de estudio se basa en la necesidad de superar las limitaciones de métodos convencionales y avanzar hacia un proceso inteligente de segmentación, que se convierta en un recurso esencial para la planificación energética en la zona cubierta por la EEQ.\\
 
 % RESULTADOS, CONCLUSIONES Y RECOMENDACIONES
 
