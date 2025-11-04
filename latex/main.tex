@@ -514,9 +514,210 @@ El modelo CRISP-DM es sumamente flexible, y sus fases pueden ser personalizadas 
     
 \end{enumerate}
 
-Es importante recalcar que, en el desarrollo del presente componente, la fase número seis de CRISP-DM correspondiente al despliegue fue modificada en función de los objetivos específicos del proyecto. En este caso, a diferencia de la metodología original, que incluye en esta fase la implementación del modelo en un entorno productivo, en este caso, esta fase tendrá un enfoque comparativo de los resultados obtenidos con los distintos algoritmos de clustering. Para ello, las agrupaciones fueron analizadas mediante el uso de métricas de evaluación que permiten cuantificar la calidad de los clústeres, con la finalidad de elegir aquellos resultados que brinden una segmentación más coherente y homogénea. Esta adaptación fue posible gracias a la flexibilidad que caracteriza a CRISP-DM, como se mencionó antes, lo que hace posible la modificación de sus estapas en base a los requerimientos específicos del proyecto, sin perder la consistencia metodoloógica y asegurando la validez del proceso ejecutado.\\
+Es importante recalcar que, en el desarrollo del presente componente, la fase número seis de CRISP-DM correspondiente al despliegue fue modificada en función de los objetivos específicos del proyecto. En este caso, a diferencia de la metodología original, que incluye en esta fase la implementación del modelo en un entorno productivo, en este caso, esta fase tendrá un enfoque comparativo de los resultados obtenidos con los distintos algoritmos de clustering. Para ello, las agrupaciones fueron analizadas mediante el uso de métricas de evaluación que permiten cuantificar la calidad de los clústeres, con la finalidad de elegir aquellos resultados que brinden una segmentación más coherente y homogénea. Esta adaptación fue posible gracias a la flexibilidad que caracteriza a CRISP-DM, como se mencionó antes, lo que hace posible la modificación de sus estapas en base a los requerimientos específicos del proyecto, sin perder la consistencia metodoloógica y asegurando la validez del proceso ejecutado.
 
 \section{Implementación de CRISP-DM}
+Para la implementación de CRISP-DM en el presente componente se han tenido en cuenta las fases y tareas definidas de forma precisa y teórica en \cite{crisp-dm2}, las cuales han sido adaptadas (de ser necesario) y desarrolladas en función de las necesidades específicas del proyecto, sin alterar la estructura metodológica y secuencial original. 
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.37]{./imgs/cdm.drawio.png}
+\caption{{Esquematización de las fases y tareas de la metodologia CRISP-DM}}
+\label{fig:fases_tareas_crispdm}
+\end{center}
+\end{figure}
+
+La Figura \ref{fig:fases_tareas_crispdm} presenta un esquema que sintetiza las fases y tareas que se llevarán a cabo en el desarrollo del presente componente. La figura es de elaboración propia y fue realizada a partir de los principios establecidos en \cite{crisp-dm2}.
+
+\subsection{Entendimiento del negocio}
+\subsubsection*{Levantamiento inicial de información}
+Se elaboró un mapa mental (ver Figura \ref{fig:mind_map_lev_inf}) como técnica inicial para recolectar y organizar la información relativa al contexto del negocio, actores involucrados, problemática, requerimientos, los objetivos y las salidas esperadas del proyecto. Esta herramienta posibilitó una visión completa del entorno y la determinación de la trazabilidad entre los elementos empresariales y los objetivos del componente.\\
+
+Como se puede apreciar, el mapa mental contiene siete partes fundamentales:
+\begin{itemize}
+    \item{Problemática:} Identifica las restricciones presentes en la gestión de la demanda de los clientes no regulados, las cuales se caracterizan por la alta variablidad en sus patrones de consumo y métodos tradicionales de análisis insuficientes.
+    \item{Importancia del análisis:} Se destaca la necesidad de que la EEQ tenga conocimiento sobre los patrones de consumo que poseen los clientes no regulados debido a que estos representan un grupo de alto consumo energético.
+    \item{Necesidades expresadas:} Se detallan los requerimientos estratégicos por parte de la EEQ, tales como conocer patrones de consumo, disminuir la incertidumbre en la planificación y mejorar el uso de los recursos energéticos. 
+    \item{Objetivo del levantamiento:} Establecer criterios preliminares para una segmentación útil, que apoye la planificación energética fundamentada en evidencias y facilitar la toma de decisiones.
+    \item{Actores involucrados:} Se identifica a la EEQ como la entidad encargada de proveer de manera confiable y eficaz, a los clientes no regulados como los sujetos de estudio, y el área de Planificación como principal usuario de los resultados.
+    \item{Información inicial:} Se describe las fuentes de datos existentes, que son los registros de consumo mensual de 388 clientes a lo largo del año 2023, con períodos de medición de 5 y 15 minutos, así como variables relacionadas con la energía y la potencia.
+    \item{Salidas esperadas:} Se determinan los productos que resultarán del análisis, como las curvas de cada cliente, las curvas de demanda máxima, archivos CSV y de texto plano, además de la agrupación de los clientes en base a la similitud de sus curvas de carga características.
+\end{itemize}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.4]{./imgs/Comprensión del Negocio - Levantamiento de Información.png}
+\caption{{Mapa mental utilizado para levantamiento y organización de información}}
+\label{fig:mind_map_lev_inf}
+\end{center}
+\end{figure}
+
+\subsubsection*{Determinar los objetivos del negocio}
+El propósito de la EEQ es determinar y agrupar a los clientes no regulados según el comportamiento energético que estos reflejen en su curva de carga características anual. Con esto, se busca simplificar la planificación energética y mejorar la gestión de la demanda a través de la identificación de patrones de consumo.\\
+
+Los objetivos específicos que surgieron son:
+\begin{itemize}
+    \item{Obtener una perspectiva completa de los patrones de consumo de los clientes no regulados del sector eléctrico}
+    \item{Establecer un proceso de agrupación que posibilite el reconocimiento de comportamientos energéticos propios}
+    \item{Promover la creación de estrategias diferenciadas para gestionar la demanda y planificar la red del sistema eléctrico.}
+\end{itemize}
+
+Se considera que el proyecto tuvo éxito si las agrupaciones resultantes permiten la clara identificación de patrones energéticos característicos y si se proporciona información que pueda ser interpretable por la EEQ para la planificación estratégica.
+
+\subsubsection*{Evaluar la situación}
+Se identificaron los recursos, las limitaciones y los supuestos requeridos para llevar a cabo el proyecto, basándose en la información resumida en el mapa mental.
+
+\begin{itemize}
+    \item{Recursos disponibles:}
+    \begin{itemize}
+        \item{Registros históricos de consumo mensual (potencia activa, potencia reactiva o energía) del año 2023}
+        \item{Entorno de desarrollo den Python (con librerías como numpy, pandas, matplotlib y scikit-learn), orquestación del proceso ETL utilizando Apache Airflow sobre Docker y base de datos en nube MongoDB Atlas para guardar los datos correspondientes a las curvas de carga características}
+        \item{Personal del área de Planificación de la EEQ como usuario principal de los resultados obtenidos.}
+    \end{itemize}
+    \item{Requerimientos y limitaciones:}
+    \begin{itemize}
+        \item{El análisis está limitado a los clientes no regulados del sector eléctrico dentro del área de concesión de la EEQ.}
+        \item{Para el análisis serán considerados únicamente aquellos registros correspondientes a días laborables, todos los demás días (findes de semana y feriados) serán excluídos.}
+        \item{Garantizar que los datos tengan la consistencia característica de una serie temporal}
+        \item{Restringir el alcance a la creación y evaluación de los modelos de agrupamiento, sin un despliegue en producción.}
+    \end{itemize}
+    \item{Supuestos:}
+        \begin{itemize}
+        \item{Los valores atípicos reflejan comportamientos totalmente válidos propios de la naturaleza de la demanda eléctrica del sector no regulado.}
+        \item{Las mediciones reflejan de manera precisa el comportamiento real de los clientes.}
+    \end{itemize}
+    \item{Riesgos detectados:}
+    \begin{itemize}
+        \item{Diversidad en los formatos de los archivos de entrada (Algunos contienen solo datos de potencia, otros solo datos de energía, la fecha viene en diferentes formatos, etc...)}
+        \item{Existencia de valores nulos e inconsistencias en las series temporales.}
+        \item{Restricciones de capacidad computacional debido a la gran cantidad de datos.} 
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{Determinar los objetivos de la minería de datos}
+Después de haber establecido los objetivos del negocio, estos fueron convertidos a metas técnicas concretas del proceso de minería de datos. El objetivo de la minería de datos es implementar un modelo de clustering que permita clasificar a los clientes no regulados en grupos homogéneos, basándose en la semejanza de sus curvas de carga características anuales, las cuales estarán previamente normalizadas, con el propósito de identificar patrones de consumo que puedan ser utilizados como insumo para la planificación estratégica.
+
+Los objetivos específicos son:
+\begin{itemize}
+    \item{Crear una base de datos no estructurada con las curvas de carga características de cada cliente a partir del proceso ETL.}
+    \item{Determinar y validar número óptimo de agrupaciones utilizando técnicas como el método del codo.}
+    \item{Determinar la configuración óptima de parámetros para cada algoritmo, mediante hiperparametrización.}
+    \item{Implementar algoritmos de aprendizaje no supervisado (KMeans, GaussianMixture, Birch y Spectral Clustering) en los datos de las curvas de carga.}
+    \item{Evaluar la calidad de los clústeres utilizando métricas que cuantifican la calidad de los mismos (Silhouette Score, Davies-Bouldin Index, Calinski-Harabasz Index y correlación intra-clúster promedio.)}
+\end{itemize}
+
+Se considera que la minería de datos es exitosa si los modelos consiguen generar agrupaciones con una alta cohesión interna y una clara separación entre clústeres, lo cual se comprobará a través de métricas que cuantifican la calidad de los clústeres y una representación visual de la curva promedio de cada clúster.
+
+\subsubsection*{Elaborar el plan del proyecto}
+Se desarrolló un plan de ejecución, el cual fue estructurado en base a la metodología CRISP-DM y ajustado a las necesidades del presente componente, basándose en la información levantada y los objetivos establecidos previamente.
+
+El plan establecido para el proyecto se detalla a continuación:
+
+\begin{enumerate}
+    \item{Entendimiento del negocio:} Recopilación de información, determinación de objetivos empresariales y técnicos.
+    \item{Entendimiento de los datos:} Análisis exploratorio de los datos históricos, validación de la calidad y consistencia de los mismos.
+    \item{Preparación de los datos:} Implementación del proceso ETL que involucra pasos como la extracción, limpieza, integración, normalización y carga de las curvas de carga características de cada cliente
+    \item{Modelado:} Aplicación y optimización de los algoritmos de clustering.
+    \item{Evaluación:} Comparación de las agrupaciones obtenidas, haciendo uso de métricas cuantificadoras de calidad de las mismas.
+    \item{Adaptación de CRISP-DM en la fase final de despliegue:} La etapa de despliegue será sustituida por un análisis comparativo entre los resultados obtenidos por cada algoritmo, utilizando visualizaciones detalladas de las curvas de carga agrupadas, con el fin de generar conocimiento de utilidad para el área de Planificación de la EEQ.
+\end{enumerate}
+
+
+\subsection{Entendimiento de los datos}
+
+
+\subsubsection*{Recolección inicial de los datos}
+Se llevó a cabo la recolección de datos relevantes para el análisis, los cuales corresponden a los registros históricos de consumo energético de los clientes no regulados de la EEQ a lo largo del año 2023.\\
+
+Los datos fueron proporcionados directamente por un representante del área de Planificación, el cual a su vez, obtuvo los datos a partir del sistema de medición comercial de la EEQ (Telemediciones). Cada cliente tiene doce archivos que corresponden a mediciones mensuales, estos archivos pueden contener las mediciones en energía (kWh), o en potencias activa (kW) y reactiva (KVAr).
+
+Los archivos fueron proporcionados en formatos .csv, mostrando diferencias significativas en su estructura y formato, sin embargo, mantienen información específica del valor medido, la fecha y la hora.
+
+\subsubsection*{Descripción de los datos}
+Tras la recolección de datos, se llevó a cabo una revisión inicial de los archivos para determinar su estructura general y las variables que estos contenían. Esta tarea permitió determinar la naturaleza de los datos y evaluar el tipo de formato que poseen. A pesar de venir en archivos separados por coma (.csv), los archivos no necesariamente están separados por coma, algunos vienen separados por tabulaciones y otros por punto y coma, incluyen datos sobre el consumo y la temporalidad de los mismos. Se pudo notar lo siguiente:
+
+\begin{itemize}
+    \item Aparentemente, la frecuencia de medición entre registros es de 15 minutos.
+    \item Existen dos grupos de clientes: los que tienen únicamente mediciones de energía y los que tienen mediciones de potencia activa y reactiva.
+    \item El formato de la fecha varía (ej: AAAA/MM/DD, AAAA-MM-DD, DD/MM/AAAA)
+    \item Algunos archivos presentan ausencia de registros debido a inconsistencias o pérdidas derivadas del sistema de medición.
+    \item Algunos archivos poseen líneas de resumen, las cuales incluyen totales ponderados agregados para intervalos específicos.
+    \item Algunos valores dentro de los registros contienen coma como separador de miles y punto como separador decimal (ej: 1,203.239)
+\end{itemize}
+
+En la Figura \ref{fig:fig_desc_datos} se puede apreciar lo mencionado anteriormente.
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.483]{./imgs/desc_datos.png}
+\caption{{Estructura general de los archivos de datos de consumo energético}}
+\label{fig:fig_desc_datos}
+\end{center}
+\end{figure}
+
+\subsubsection*{Exploración de los datos}
+Se llevó a cabo un análisis exploratorio de los datos con el fin de comprender de manera general su estructura, calidad y características principales. Esta tarea posibilitó el descubrimiento de distribuciones, patrones globales y eventuales anomalías que podrían tener un impacto en las estapas subsiguientes del proceso de análisis.\\
+
+Se incorporaron visualizaciones que reflejan las principales cualidades del conjunto de datos, se elaboró una imagen resumen que presenta la cantidad de clientes según el tipo de medición, como se distribuyen los registros totales por cliente, la variabilidad en el número de registros mediante un diagrama de caja y el número de registros que existen en función del intervalo de medición. La Figura \ref{fig:fig_exploracion_datos} presenta los resultados del análisis exploratorio de los datos.
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.38]{./imgs/exp_datos.png}
+\caption{{Exploración de los datos de consumo energético}}
+\label{fig:fig_exploracion_datos}
+\end{center}
+\end{figure}
+
+La Figura \ref{fig:fig_exploracion_datos} muestra cuatro gráficos:
+
+\begin{itemize}
+    \item Gráfico de barras: Cantidad de clientes según el tipo de medición (potencias o energía).
+    \item Histograma: Distribución del número de registros totales por cliente.
+    \item Diagrama de caja: Variabilidad en el número de registros totales por cliente.
+    \item Gráfico de barras: Cantidad de clientes según el intervalo de medición de sus registros.
+\end{itemize}
+
+El primer gráfico (superior izquierdo) indica que la mayoría de los clientes tienen registros de potencia activa y reactiva, mientras que un número menor tiene registros de energía. El segundo gráfico (superior derecho) revela que la mayoría de los clientes tienen entre 30.000 y 35040 registros, con algunos clientes teniendo significativamente un menor, un comportamiento que puede ser causado debido a pérdida de registros desde el propio sistema de medición.\\
+
+El tercer gráfico (inferior izquierdo) es un diagrama de caja que muestra la variabilidad en el número de registros por cliente, indicando la presencia de algunos valores atípicos. Finalmente, el cuarto gráfico (inferior derecho) muestra que todos los clientes tienen un intervalo de medición de 15 minutos, lo cual es consistente con la frecuencia de medición esperada.
+
+\subsubsection*{Verificar calidad de los datos}
+Dado que en tareas anteriores se identificaron de manera superficial inconsistencias en los archivos de medición, tales como la variación en los formatos de fecha, uso de coma como separador de miles y la ausencia de registros, se llevó a cabo una comprobación de su calidad haciendo énfasis en los aspectos mencionados anteriormente. Esta tarea posibilitó determinar el grado de completitud, coherencia y consistencia de los datos antes de proceder con su preparación.\\
+
+Se llevaron a cabo varias comprobaciones con el objetivo de cuantificar y observar el impacto generado de estas anomalías sobre el conjunto de datos. Para ello, se elaboró una imagen que resume los resultados obtenidos en términos de uniformidad de formato, consistencia numérica y presencia de valores nulos y ausentes.\\
+
+La Figura \ref{fig:fig_verif_cal_datos} contiene cuatro gráficos de barras que representan los resultados del análisis de la calidad de los datos:
+\begin{itemize}
+    \item Distribución de registros según el formato de fecha que contienen.
+    \item Número de registros que presentan la coma como separador de miles en cada grupo de clientes.
+    \item Cantidad de clientes agrupados por intervalos según la completitud de sus registros [70\%, 85\%] y [85\%, 100\%] respecto al total ideal de 35040 registros.
+    \item Número de registros nulos o sin valor identificados en cada grupo de clientes.
+\end{itemize}
+
+\clearpage
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.39]{./imgs/verif_cal_datos.png}
+\caption{{Verificación de la calidad de los datos de consumo energético}}
+\label{fig:fig_verif_cal_datos}
+\end{center}
+\end{figure}
+
+Como se puede apreciar en el primer gráfico (superior izquierdo), el formato más común es el YYYY-MM-DD (66,3\%), seguido por YYYY/MM/DD (21,4\%) y DD/MM/YYYY (12,2\%). Esta falta de uniformidad en el formato de fecha es crítico debido a que para construir series temporales se debe tener un formato único, se requerirá un proceso de estandarización de formato de fecha para solucionarlo.\\
+
+El segundo gráfico (superior derecho) revela que dentro del grupo de clientes que poseen únicamente mediciones de energía, existen 74795 registros que tienen la coma como separador de miles. Si no se trata, esto provocará problemas relacionados con la interpretación de datos numéricos debido a que Python no trabaja con separadores de miles, y su separador decimal es el punto.\\
+
+El tercer gráfico (inferior izquierdo) muestra que 319 clientes tienen una completitud de datos mayor al 85\% del total ideal de registros anuales, mientras que 69 clientes se encuentran entre el 70\% y 85\%, debido a pérdidas de información derivadas del sistema de donde fueron obtenidas las mediciones.\\
+
+Por último, el cuarto gráfico (inferior derecho) indica que dentro del grupo de clientes que solo tienen mediciones de potencias, existen en total 17 registros nulos, mientras que en el grupo de clientes que posee únicamente mediciones de energía, existe un total de 2339 registros nulos. El volúmen de registros que possen valores nulos es mínimo, por lo que se considera apropiado utilizar un método de interpolación para llenar dichos valores. Este método posibilitará que sean estimados en función de la tendencia particular de cada cliente, conservando la coherencia temporal y el comportamiento original de los datos.
+
+\subsection{Preparación de los datos}
+\subsubsection*{Seleccionar los datos}
+\subsubsection*{Limpiar los datos}
+\subsubsection*{Construir los datos}
+\subsubsection*{Integrar los datos}
+\subsubsection*{Formatear los datos}
+
 \subsection{Flujo de trabajo propuesto}
 
 \begin{itemize}
