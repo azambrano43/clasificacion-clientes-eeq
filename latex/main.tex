@@ -712,11 +712,166 @@ El tercer gráfico (inferior izquierdo) muestra que 319 clientes tienen una comp
 Por último, el cuarto gráfico (inferior derecho) indica que dentro del grupo de clientes que solo tienen mediciones de potencias, existen en total 17 registros nulos, mientras que en el grupo de clientes que posee únicamente mediciones de energía, existe un total de 2339 registros nulos. El volúmen de registros que possen valores nulos es mínimo, por lo que se considera apropiado utilizar un método de interpolación para llenar dichos valores. Este método posibilitará que sean estimados en función de la tendencia particular de cada cliente, conservando la coherencia temporal y el comportamiento original de los datos.
 
 \subsection{Preparación de los datos}
+En esta etapa, se implementó un proceso ETL a través de Apache Airflow en un entorno Docker, tal y como se ilustra en la Figura \ref{fig:proceso_etl}, la cual es de elaboración propia. Gracias a este procedimiento se pudo orquestar de manera eficiente la extracción, transformación y carga de los datos de consumo, garantizando automatización y trazabilidad en la ejecución del flujo.\\
+
+El uso de Apache Airflow permitió construir un pipeline totalmente modularizado, donde cada tarea del DAG constituyó una acción concreta en el proceso ETL. Este pipeline abarca desde la lectura y consolidación de los archivos mensuales de cada cliente hasta la elaboración de las curvas de carga características y su respectiva carga en la base de datos de MongoDB Atlas.
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.76]{./imgs/ETL_process.png}
+\caption{{Esquematización del proceso ETL y sus etapas}}
+\label{fig:proceso_etl}
+\end{center}
+\end{figure}
+
+
+\clearpage
+Para la implementación, Apache Airflow fue desplegado en contenedores Docker utilizando la imagen oficial, la cual configura varios servicios, entre ellos, los fundamentales para el funcionamiento de Airflow \cite{airflow_docs}:
+
+\begin{itemize}
+    \item Scheduler: Organiza y programa la ejecución de tareas establecidas en los DAGs.
+    \item Worker: Ejecuta las tareas asignadas por el scheduler.
+    \item Webserver: Ofrece una interfaz de usuario que permite la gestión de los DAGs y sus tareas.
+    \item Postgres: Almacena metadatos como estado de las tareas, DAGs y logs.
+\end{itemize}
+
+Toda esta arquitectura se encuentra definida en el archivo \texttt{docker-compose.yaml}, el cual a su vez fue modificado para incluir de manera adicional tres volúmenes compartidos entre el sistema de archivos local y el entorno aislado de Airflow:
+
+\begin{itemize}
+    \item /data: Contiene todos los archivos \texttt{.csv} correspondientes a las mediciones mensuales de todos los clientes no regulados.
+    \item /outputs: Este volúmen fue creado con la finalidad de almacenar los entregables adicionales requeridos por la EEQ.
+    \item /utils: Contiene un archivo \texttt{.env}, cuyo contenido son credenciales para comunicarse con MongoDB Atlas. Adicionalmente contiene el archivo \texttt{utilities.py}, el cual contiene funciones auxiliares para comunicación con la base de datos, estandarizar formato de fechas, generar las curvas de carga características, entre otros.
+\end{itemize}
+
+La Figura \ref{fig:volumenes_dockercompose} ilustra la modificación realizada al archivo \texttt{docker-compose.yaml} para añadir los volúmenes compartidos mencionadios anteriormente:
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.75]{./imgs/vols_dockercompose.png}
+\caption{{Inclusión de volúmenes compartidos en el archivo docker-compose.yaml}}
+\label{fig:volumenes_dockercompose}
+\end{center}
+\end{figure}
+
+Tras haber desplegado de manera exitosa el entorno de Airflow, se realizó la instalación de las librerías necesarias para la ejecución del DAG correspondiente al proceso ETL. Dado que los servicios encargados de orquestar la ejecución de las tareas son el worker y el scheduler, cuyos identificadores son 0c91068629f2 y 0219ddd747d0, se accedió a la línea de comandos propia de dicho contenedor haciendo uso de la sentencia \texttt{docker exec -it {IDENTIFICADOR} bash}.\\
+
+Dentro de la CLI de cada servicio, se hizo uso del comando \texttt{python -m pip install pandas numpy scikit-learn pymongo dotenv matplotlib} para instalar librerías como pandas, numpy, scikit-learn, pymongo, dotenv y matplotlib. La Figura \ref{fig:instalacion_librerias_worker} muestra todo el proceso mencionado anteriormente:
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.6]{./imgs/worker_inst_librerias.png}
+\caption{{Identificación de worker e instalación de librerías necesarias.}}
+\label{fig:instalacion_librerias_worker}
+\end{center}
+\end{figure}
+
+Una vez establecido el ambiente de ejecución con sus respectivas dependencias, se estructuró el proceso ETL dentro de un grafo acíclico dirigido (DAG) denominado \texttt{etl\_dag\_datos\_consumo}. Cada nodo que se encuentra en el grafo simboliza una tarea autónoma dentro del proceso ETL, ejecutada de manera secuencial o paralela en función de las dependencias que tenga definidas.\\
+
+La Figura \ref{fig:dag_etl_process} presenta el DAG diseñado para el presente análisis, compuesto por las diferentes tareas:
+
+\begin{itemize}
+    \item extraer\_datos\_grupo01: lee y consolida los archivos mensuales de los clientes que tienen mediciones correspondientes a demanda activa y reactiva.
+    \item extraer\_datos\_grupo02: lo mismo que la tarea anterior con la diferencia que lo realiza para los clientes que tienen mediciones de energía aparente.
+    \item transformar\_datos\_grupo01 y transformar\_datos\_grupo02: para cada grupo, se encargan de la limpieza, estandarización, normalización y cálculo de la potencia aparente de los datos.
+    \item transformar\_datos\_unificados\: unifica todos los datos a partir de los conjuntos procesados de los dos grupos, lo que da como resultado un DataFrame consolidado de curvas tipo.
+    \item cargar\_datos\_curvas\_tipo\: lleva a cabo el formateo final y carga el conjunto de datos consolidado en la base de datos de MongoDB Atlas.
+    \item generar\_entregables\_por\_cliente\: no es parte del proceso ETL como tal, genera archivos requeridos por la EEQ, tales como curva tipo, curva de demanda máxima y archivos .csv con sus respectivas coordenadas.
+\end{itemize}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.31]{./imgs/etl_dag.png}
+\caption{{DAG de proceso ETL correspondiente a los datos de consumo}}
+\label{fig:dag_etl_process}
+\end{center}
+\end{figure}
+
 \subsubsection*{Seleccionar los datos}
+En esta tarea, se seleccionaron los conjuntos de datos que se usarían en las etapas siguientes del análisis, garantizando que coincidieran con las metas establecidas en la fase de entendimiento del negocio. Los datos se obtuvieron de los registros históricos de mediciones mensuales de los clientes no regulados de la EEQ, correspondientes a 2023.\\
+
+Tomando en cuenta la estructura observada en el análisis exploratorio de los datos, se validó que el intervalo de medición entre registro es de 15 minutos, también se determinó que los archivos de medición presentan dos configuraciones distintas según el tipo de variable que registran, por lo que se establecieron dos flujos paralelos de procesamiento dentro del pipeline ETL implementado en Apache Airflow:
+
+\begin{itemize}
+    \item Grupo 01: Constituido por clientes cuyos archivos incluían únicamente valores de demanda activa y reactiva, las columnas de interés son ``Demanda activa DEL'' y ``Demanda Reactiva DEL''.
+    \item Grupo 02: Constituido por clientes cuyos archivos solo incluían mediciones de energía aparente acumulada, la columna de interés es ``AS (kWh)''.
+\end{itemize}
+
+Las tareas \texttt{extraer\_datos\_grupo01} y \texttt{extraer\_datos\_grupo02} se utilizaron para gestionar cada grupo independientemente en el DAG \texttt{etl\_dag\_datos\_consumo}. Los archivos de medición mensual de cada cliento fueron extraídos desde el directorio \texttt{/data} para luego consolidar dicha información en un solo conjunto anual por cada cliente. En este proceso, se conservaron solo las columnas relevantes para el análisis (Demanda activa DEL, Demanda reactiva DEL, AS (kWh) y Fecha).\\
+
+Como resultado de las tareas de extracción de los datos se obtuvieron los diccionarios (clave: valor) \texttt{dict\_dfs\_clientes\_g1} y \texttt{dict\_dfs\_clientes\_g2}, dentro de los cuales:
+
+\begin{itemize}
+    \item La clave es el identificador del cliente, puede ser su nombre designado o un código numérico
+    \item El valor asociado a cada clave es un DataFrame que contiene todos los registros anuales consolidados de dicho cliente
+\end{itemize}
+
+La Figura \ref{fig:selec_datos} ilustra el flujo de las tareas de extracción y selección de datos dentro del DAG:
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.34]{./imgs/selec_datos.png}
+\caption{{Esquematización de entrada y consolidación de datos}}
+\label{fig:selec_datos}
+\end{center}
+\end{figure}
+
 \subsubsection*{Limpiar los datos}
+La tarea de limpieza tuvo como objetivo asegurar que los registros de medición fueran coherentes, corrigiendo errores estructurales y preparando la información durante el proceso de transformación. Esta estapa de limpieza se llevó a cabo en las tareas \texttt{transformar\_datos\_grupo01} y \texttt{transformar\_datos\_grupo02} que son parte del DAG \texttt{etl\_dag\_datos\_consumo} y que fueron ejecutadas independientemente para cada grupo de clientes respectivamente.\\
+
+Las actividades que se llevaron a cabo durante el proceso de limpieza de los datos fueron las siguientes:
+
+\begin{enumerate}
+    \item Estandarización de formatos de fecha y hora: Las variaciones de formato en las fechas obstaculizaban el tratamiento uniforme de los datos como series temporales. Se implementó la función \texttt{fecha\_formato\_unico()} con el fin de solucionar este problema y transformar cualquier formato detectado en uno estándar (YYYY/MM/DD).
+    \item Tratamiento de valores nulos: Se empleó un interpolador spline cúbico para llenar los valores faltantes identificados en tareas anteriores, tomando en cuenta que estos eran pocos en comparación con el total de datos anuales por cliente. Se eligió este método debido a que posibilita la reconstrucción de los datos de manera coherente, sin perder la tendencia natural de la serie temporal.
+    \item Exclusión de días no laborables y feriados: Los registros correspondientes a fines de semana y feriados nacionales del año 2023 fueron eliminados. Esta exclusión se basó en que los clientes no regulados tienen patrones de consumo altamente asociados a su actividad laboral, por lo cual, los días no laborables no son útiles para el análisis.
+    \item Separadores de miles: En tareas anteriores se han detectado valores que poseen la coma como separador de miles y punto como separador decimal, esto se atribuye únicamente al grupo de clientes con mediciones de energía. Se eliminaron las comas y se estableció el tipo de dato como flotante para posibilitar que Python pueda procesarlos correctamente.
+\end{enumerate}
+
+La elección del método de interpolación mencionado anteriormente se basó en el hecho de que ha sido empleado en trabajos similares, como en \cite{Petrusevich2021}, que resalta los buenos resultados que ofrecen los splines cúbicos al rellenar datos ausentes en series temporales; y en \cite{Wuest2017}, que muestra cómo este método de interpolación posibilita conservar la tendencia general de los datos sin provocar alteraciones bruscas o valores incoherentes. Por estos motivos, se consideró una opción apropiada para el presente análisis.
+
+
 \subsubsection*{Construir los datos}
+En esta tarea se generaron las variables derivadas requeridas para representar de manera uniforme el comportamiento energético de los clientes no regulados. La meta principal fue la creación de atributos que posibilitaran el análisis del consumo de una manera comparable entre todos los clientes, sin distinción del tipo de medición disponible (potencias o energía).\\
+
+Con este propósito, se implementaron las transformaciones correspondientes en las tareas \texttt{transformar\_datos\_grupo01} y \texttt{transformar\_datos\_grupo02} que son parte del DAG \texttt{etl\_dag\_datos\_consumo}, donde se crearon las variables potencia aparente y potencia aparente escalada.\\
+
+Para el primer grupo de clientes, dado que poseen mediciones de potencia activa y reactiva (P y Q), la potencia aparente puede ser calculada aplicando el teorema de pitágoras:
+\begin{equation}
+    S = \sqrt{P^{2} + Q^{2}}
+\end{equation}
+
+Por otro lado, el segundo grupo de clientes posee mediciones de energía aparente acumulada (AS (kWh)), en este caso, la potencia aparente puede ser calculada multiplicando dicho valor por cuatro (debido a que es intervalos de 15 minutos):
+\begin{equation}
+    S = E_{15\text{min}} \times 4
+\end{equation}
+
+Una vez se tiene calculada la potencia aparente para los dos grupos de clientes, se procede a normalizar con el fin de garantizar la comparabilidad entre curvas de carga con diferentes magnitudes de consumo, para esto se utilizó la técnica de escalado mínimo-máximo, la cual transforma los valores de potencia aparente dentro del rango definido, que en este caso es [0, 1].\\
+
+Se decidió implementar un escalado individual para cada día de cada cliente, ya que existen días en los que la demanda es mucho más alta que en otros. Con este método se garantiza una normalización balanceada entre los diferentes días, evitando que los días con valores altos 'aplanen' al resto de registros. El procedimiento consiste en escalar cada medición de acuerdo con los valores correspondientes de su propio día, siguiendo la siguiente fórmula:
+\begin{equation}
+    S_{\text{escalada}} = \frac{S - S_{\text{min}}}{S_{\text{max}} - S_{\text{min}}}
+\end{equation}
+
+La normalización es esencial, debido a que posibilita que los algoritmos de clustering se enfoquen únicamente en la forma de la curva de consumo y no en su magnitud, evitando que clientes cuyas demandas son altas alteren los resultados del análisis.
+
 \subsubsection*{Integrar los datos}
+Una vez concluido todo el proceso de transformación individual de cada grupo de clientes (selección, limpieza y construcción), se procedió a unificar los datos procesados que provenían de los dos grupos establecidos, con el fin de consolidar un único conjunto global y proceder con el cálculo de sus curvas características representativas anuales. La integración fue realizada en la tarea \texttt{transformar\_datos\_unificados} que es parte del DAG \texttt{etl\_dag\_datos\_consumo}, donde se combinaron los diccionarios resultantes de los flujos de transformación individuales de cada grupo en uno solo.\\
+
+Una vez consolidada toda la información, se procedió a obtener la curva tipo, con ayuda de la función \texttt{obtener\_coords\_curva\_tipo} se realizó un agregamiento por hora, calculando la mediana de la potencia aparente escalada durante todos los días del año. Se utilizó la mediana debido a que es una medida robusta frente a valores atípicos, los cuales son propios e inherentes al comportamiento energético de los clientes no regulados.\\
+
+Para concluir, se integraron las curvas tipo de todos los clientes en un solo DataFrame consolidado, donde cada fila corresponde a un cliente y cada columna a una marca temporal (desde las 00:00 hastas las 23:45) en intervalos de cada 15 minutos.
+
+
+
 \subsubsection*{Formatear los datos}
+Para concluir la fase de preparación de los datos, se realizaron las modificaciones finales al formato del conjunto de curvas tipo creado, con el objetivo de preaprar los datos para ser almacenados y modelados más adelante. La tarea \texttt{cargar\_datos\_curvas\_tipo} que es parte del DAG \texttt{etl\_dag\_datos\_consumo} fue donde se ejecutó esta operación, realizando las siguientes actividades:
+
+\begin{enumerate}
+    \item Se comprobó que cada registros tuviera un identificador exclusivo para el cliente, convirtiendo el campo 'Cliente' a tipo cadena de caracteres, debido a que el identificador puede ser alfanumérico. 
+    \item Se convirtió el DataFrame consolidado con los datos de las curvas tipo en un diccionario orientado a registros, lo que permitió insertar los documentos directamente en la base de datos de MongoDB Atlas.
+\end{enumerate}
+
+Finalmente, se creó un índice sobre el campo 'Cliente' con el fin de optimizar consultas dentro de la base de datos y se procedió a cargar los registros en la colección CurvasTipoAnuales, dando por finalizada la fase de preparación de los datos y obteniendo así un conjunto de datos totalmente limpio, estructurado, formateado y preparado para su uso en la fase de modelado. 
 
 \subsection{Flujo de trabajo propuesto}
 

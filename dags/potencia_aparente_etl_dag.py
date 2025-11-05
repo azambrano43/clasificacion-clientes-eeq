@@ -1,9 +1,13 @@
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
+from airflow.operators.empty import EmptyOperator
+from airflow.utils.task_group import TaskGroup
 from airflow.utils.dates import days_ago
+from airflow.decorators import task
 
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
+from datetime import timedelta
 mmscaler = MinMaxScaler()
 from datetime import datetime
 import pandas as pd
@@ -24,9 +28,7 @@ sys.path.append('/opt/airflow/outputs')
 
 from utilities import *
 
-
 def extraer_datos_grupo01(**kwargs):
-
     # Obtener una lista con los nombres de los archivos de las mediciones del grupo 01
     mediciones_clientes_g1 = r"/opt/airflow/data/mediciones_por_mes_g1"
     archivos_mediciones_g1 = list(os.scandir(mediciones_clientes_g1))
@@ -65,10 +67,7 @@ def extraer_datos_grupo01(**kwargs):
     # Cargar los valores con xcom
     return dict_dfs_clientes_g1
 
-
-
 def extraer_datos_grupo02(**kwargs):
-    
     # Obtener una lista con los nombres de los archivos de las mediciones del grupo 02
     mediciones_clientes_g2 = "/opt/airflow/data/mediciones_por_mes_g2"
     archivos_mediciones_g2 = list(os.scandir(mediciones_clientes_g2))
@@ -107,12 +106,11 @@ def extraer_datos_grupo02(**kwargs):
     return dict_dfs_clientes_g2
 
 
-
 def transformar_datos_grupo01(**kwargs):
 
     # Obtener el dataframe extraido
     ti = kwargs['ti']
-    dict_dfs_clientes_g1 = ti.xcom_pull(task_ids='extraer_datos_grupo01', key='return_value')
+    dict_dfs_clientes_g1 = ti.xcom_pull(task_ids='ETL.extraer_datos_grupo01', key='return_value')
 
     gc.collect()
     dict_dfs_procesados_g1 = {}
@@ -152,7 +150,7 @@ def transformar_datos_grupo01(**kwargs):
         df_archivo_g1 = df_archivo_g1[~df_archivo_g1['Fecha'].isin(feriados_nacionales) & ~df_archivo_g1['Fecha'].dt.weekday.isin([5, 6])]
 
         # Interpolar valores nulos usando una función polinomial
-        df_archivo_g1["Potencia_aparente"] = df_archivo_g1["Potencia_aparente"].interpolate(method='polynomial', order=3)
+        df_archivo_g1["Potencia_aparente"] = df_archivo_g1["Potencia_aparente"].interpolate(method='cubicspline')
 
         # Conservar solo las columnas de interés
         df_archivo_g1 = df_archivo_g1[["Fecha", "Hora", "Potencia_aparente"]]
@@ -178,12 +176,11 @@ def transformar_datos_grupo01(**kwargs):
     return dict_dfs_procesados_g1
 
 
-
 def transformar_datos_grupo02(**kwargs):
 
     # Obtener el dataframe extraido
     ti = kwargs['ti']
-    dict_dfs_clientes_g2 = ti.xcom_pull(task_ids='extraer_datos_grupo02', key='return_value')
+    dict_dfs_clientes_g2 = ti.xcom_pull(task_ids='ETL.extraer_datos_grupo02', key='return_value')
 
     dict_dfs_procesados_g2 = {}
 
@@ -240,7 +237,7 @@ def transformar_datos_grupo02(**kwargs):
         df_archivo_g2 = df_archivo_g2[~df_archivo_g2['Fecha'].isin(feriados_nacionales) & ~df_archivo_g2['Fecha'].dt.weekday.isin([5, 6])]
 
         # Interpolar valores nulos usando una función polinomial
-        df_archivo_g2["Potencia_aparente"] = df_archivo_g2["Potencia_aparente"].interpolate(method='polynomial', order=3)
+        df_archivo_g2["Potencia_aparente"] = df_archivo_g2["Potencia_aparente"].interpolate(method='cubicspline')
 
         # Conservar solo las columnas de interés
         df_archivo_g2 = df_archivo_g2[["Fecha", "Hora", "Potencia_aparente"]]
@@ -265,13 +262,48 @@ def transformar_datos_grupo02(**kwargs):
     # Retornar el dicccionario con los DataFrames que tienen los datos procesados
     return dict_dfs_procesados_g2
 
+def transformar_datos_unificados(**kwargs):
+    # Obtener los diccionarios con los datos del grupo de clientes 01 y 02
+    ti = kwargs['ti']
+    dict_dfs_procesados_g1 = ti.xcom_pull(task_ids='ETL.transformar_datos_grupo01', key='return_value')
+    dict_dfs_procesados_g2 = ti.xcom_pull(task_ids='ETL.transformar_datos_grupo02', key='return_value')    
+
+    # Unificar todos los clientes procesados
+    dict_todos_los_clientes = dict_dfs_procesados_g1 | dict_dfs_procesados_g2
+    del dict_dfs_procesados_g1, dict_dfs_procesados_g2
+    gc.collect()
+
+    # Construir el DataFrame consolidado de curvas tipo (30 min) por cliente
+    registros_curvas_todas = []
+    columnas_df_todas_las_curvas = None
+
+    for cliente, df_medicion_anual in dict_todos_los_clientes.items():
+        df_curva_tipo = obtener_coords_curva_tipo(df_medicion_anual)
+
+        # Armar registro: [Cliente, valores escalados...]
+        fila = [cliente]
+        fila.extend(df_curva_tipo["Potencia_aparente_escalada"].values.tolist())
+        registros_curvas_todas.append(fila)
+
+        # Guardar columnas una sola vez
+        if columnas_df_todas_las_curvas is None:
+            columnas_df_todas_las_curvas = ["Cliente"] + df_curva_tipo["Hora"].values.tolist()
+
+    del dict_todos_los_clientes
+    gc.collect()
+
+    # Construir DF final
+    df_registros_todas_las_curvas = pd.DataFrame(registros_curvas_todas, columns=columnas_df_todas_las_curvas)
+    
+    # Retornar a la tarea de carga
+    return df_registros_todas_las_curvas
 
 
 def generar_entregables_por_cliente(**kwargs):
     # Obtener los diccionarios con los datos del grupo de clientes 01 y 02
     ti = kwargs['ti']
-    dict_dfs_procesados_g1 = ti.xcom_pull(task_ids='transformar_datos_grupo01', key='return_value')
-    dict_dfs_procesados_g2 = ti.xcom_pull(task_ids='transformar_datos_grupo02', key='return_value')
+    dict_dfs_procesados_g1 = ti.xcom_pull(task_ids='ETL.transformar_datos_grupo01', key='return_value')
+    dict_dfs_procesados_g2 = ti.xcom_pull(task_ids='ETL.transformar_datos_grupo02', key='return_value')
 
     # Definir path de salida para los entregables
     path_entregables = "/opt/airflow/outputs"
@@ -347,83 +379,92 @@ def generar_entregables_por_cliente(**kwargs):
 
 
 def cargar_datos_curvas_tipo(**kwargs):
-    # Obtener el dataframe con los datos de las demandas mensuales
+    # Obtener el DataFrame con los datos unificados de la tarea transformar_datos_unificados
     ti = kwargs['ti']
-    df_registros_todas_las_curvas = ti.xcom_pull(task_ids='generar_entregables_por_cliente', key='return_value')
+    df_registros_todas_las_curvas = ti.xcom_pull(task_ids='ETL.transformar_datos_unificados', key='return_value')
 
-    ### Verificar valores nulos
-    df_registros_todas_las_curvas[df_registros_todas_las_curvas.isna().any(axis=1)]
-
-    ### Verificar duplicados
+    # Tratar el nombre o identificador del cliente como texto
     df_registros_todas_las_curvas["Cliente"] = df_registros_todas_las_curvas["Cliente"].astype("string")
-    df_registros_todas_las_curvas["Cliente"] = df_registros_todas_las_curvas["Cliente"].apply(lambda x: x[1:] if x.startswith('0') else x)
-    df_registros_todas_las_curvas[df_registros_todas_las_curvas["Cliente"].duplicated(keep=False)]
 
-    ### Excluir filas con valores nulos o filas duplicadas
-    excluir = ['90000662']
-    df_registros_todas_las_curvas = df_registros_todas_las_curvas[~df_registros_todas_las_curvas["Cliente"].isin(excluir)]
-    df_registros_todas_las_curvas = df_registros_todas_las_curvas.drop_duplicates(subset="Cliente")
-
-    # Obtener cliente para conectar a la db
+    # Obtener cliente de base de datos y cargar
     db_cliente = obtener_cliente_db()
-
-    # Convertir el dataframe a diccionario
     datos_insertar = df_registros_todas_las_curvas.to_dict(orient='records')
 
-    # Eliminar cualquier documento existente en la colección
-    db_cliente.CurvasTipo.CurvasTipo_30m.delete_many({})
-
-    # Creación de índice para el campo de la fecha
-    db_cliente.CurvasTipo.CurvasTipo_30m.create_index([("Cliente", 1)])
-
-    # Insertar en la base de datos
-    db_cliente.CurvasTipo.CurvasTipo_30m.insert_many(datos_insertar)
+    db_cliente.CurvasTipo.CurvasTipoAnuales.delete_many({})
+    db_cliente.CurvasTipo.CurvasTipoAnuales.create_index([("Cliente", 1)])
+    db_cliente.CurvasTipo.CurvasTipoAnuales.insert_many(datos_insertar)
 
 
-with DAG('etl_dag_datos_potencia',
-        start_date=datetime(2025, 2, 1), 
-        schedule_interval=None, 
-        catchup=False,
-        description='DAG de proceso ETL para datos de clientes no regulados',
-        ) as dag:
-    extraer_grupo01_task = PythonOperator(
-        task_id='extraer_datos_grupo01',
-        python_callable=extraer_datos_grupo01,
-        provide_context=True
-    )
+with DAG(
+    'etl_dag_datos_consumo',
+    start_date=datetime(2025, 2, 1),
+    schedule_interval=None,
+    catchup=False,
+    description='DAG de proceso ETL correspondiente a los datos de consumo',
+) as dag:
     
-    extraer_grupo02_task = PythonOperator(
-        task_id='extraer_datos_grupo02',
-        python_callable=extraer_datos_grupo02,
-        provide_context=True
-    )
+    inicio_etl = EmptyOperator(task_id='Inicio_ETL')
+    fin_etl = EmptyOperator(task_id='Fin_ETL')
 
-    transformar_datos_grupo01_task = PythonOperator(
-        task_id='transformar_datos_grupo01',
-        python_callable=transformar_datos_grupo01,
-        provide_context=True
-    )
+    # -------------------------
+    #   TaskGroup ETL (finaliza en cargar_datos_curvas_tipo)
+    # -------------------------
+    with TaskGroup("ETL", tooltip="ETL Group") as etl:
+        extraer_grupo01_task = PythonOperator(
+            task_id='extraer_datos_grupo01',
+            python_callable=extraer_datos_grupo01,
+            provide_context=True
+        )
 
-    transformar_datos_grupo02_task = PythonOperator(
-        task_id='transformar_datos_grupo02',
-        python_callable=transformar_datos_grupo02,
-        provide_context=True
-    )
+        extraer_grupo02_task = PythonOperator(
+            task_id='extraer_datos_grupo02',
+            python_callable=extraer_datos_grupo02,
+            provide_context=True
+        )
 
+        transformar_datos_grupo01_task = PythonOperator(
+            task_id='transformar_datos_grupo01',
+            python_callable=transformar_datos_grupo01,
+            provide_context=True,
+            retries=1,
+            retry_delay=timedelta(minutes=2),
+            execution_timeout=timedelta(minutes=30)
+        )
+
+        transformar_datos_grupo02_task = PythonOperator(
+            task_id='transformar_datos_grupo02',
+            python_callable=transformar_datos_grupo02,
+            provide_context=True
+        )
+        
+        transformar_datos_unificados_task = PythonOperator(
+            task_id='transformar_datos_unificados',
+            python_callable=transformar_datos_unificados,
+            provide_context=True
+        )
+
+        cargar_datos_curvas_tipo_task = PythonOperator(
+            task_id='cargar_datos_curvas_tipo',
+            python_callable=cargar_datos_curvas_tipo,
+            provide_context=True
+        )
+
+        # Dependencias internas del grupo ETL
+        extraer_grupo01_task >> transformar_datos_grupo01_task
+        extraer_grupo02_task >> transformar_datos_grupo02_task
+        [transformar_datos_grupo01_task, transformar_datos_grupo02_task] >> transformar_datos_unificados_task
+        transformar_datos_unificados_task >> cargar_datos_curvas_tipo_task
+        
+    # -------------------------
+    #   Tarea de entregables (FUERA del grupo y SIN conexión a fin_etl)
+    # -------------------------
     generar_entregables_task = PythonOperator(
         task_id='generar_entregables_por_cliente',
         python_callable=generar_entregables_por_cliente,
         provide_context=True
     )
+    # Depende solo de las transformaciones
+    [transformar_datos_grupo01_task, transformar_datos_grupo02_task] >> generar_entregables_task
 
-    cargar_datos_curvas_tipo_task = PythonOperator(
-        task_id='cargar_datos_curvas_tipo',
-        python_callable=cargar_datos_curvas_tipo,
-        provide_context=True
-    )
-
-    extraer_grupo01_task >> transformar_datos_grupo01_task
-    extraer_grupo02_task >> transformar_datos_grupo02_task
-    transformar_datos_grupo01_task >> generar_entregables_task
-    transformar_datos_grupo02_task >> generar_entregables_task
-    generar_entregables_task >> cargar_datos_curvas_tipo_task
+    # Cadena principal: inicio -> ETL -> fin (entregables NO la bloquea)
+    inicio_etl >> etl >> fin_etl
