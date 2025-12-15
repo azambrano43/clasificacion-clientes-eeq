@@ -131,6 +131,10 @@ def transformar_datos_grupo01(**kwargs):
 
         # Transformar la columna Fecha a un formato único
         df_archivo_g1["Fecha"] = df_archivo_g1["Fecha"].apply(fecha_formato_unico)
+        
+        # Transformar la columna Hora a un formato único hh:mm
+        df_archivo_g1["Hora"] = df_archivo_g1["Hora"].apply(hora_formato_unico)
+
 
         # Debido a que a veces se ponen datos del 2024 para reemplazar los faltantes del 2023
         # debemos descartar la fecha 29 de febrero, pues en 2023 no existe
@@ -155,8 +159,10 @@ def transformar_datos_grupo01(**kwargs):
         # Conservar solo las columnas de interés
         df_archivo_g1 = df_archivo_g1[["Fecha", "Hora", "Potencia_aparente"]]
 
-        # Escalar las mediciones
-        df_archivo_g1["Potencia_aparente_escalada"] = mmscaler.fit_transform(df_archivo_g1[["Potencia_aparente"]])
+        # Escalar las mediciones (cada día se escala individualmente)
+        df_archivo_g1["Potencia_aparente_escalada"] = df_archivo_g1.groupby("Fecha")["Potencia_aparente"].transform(
+            lambda x: (x - x.min()) / (x.max() - x.min()) if (x.max() - x.min()) != 0 else 0
+        )
 
         # Transformar a float32 para reducir consumo de memoria
         df_archivo_g1["Potencia_aparente"] = df_archivo_g1["Potencia_aparente"].astype("float32")
@@ -242,8 +248,10 @@ def transformar_datos_grupo02(**kwargs):
         # Conservar solo las columnas de interés
         df_archivo_g2 = df_archivo_g2[["Fecha", "Hora", "Potencia_aparente"]]
 
-        # Escalar las mediciones
-        df_archivo_g2["Potencia_aparente_escalada"] = mmscaler.fit_transform(df_archivo_g2[["Potencia_aparente"]])
+        # Escalar las mediciones (cada día se escala individualmente)
+        df_archivo_g2["Potencia_aparente_escalada"] = df_archivo_g2.groupby("Fecha")["Potencia_aparente"].transform(
+            lambda x: (x - x.min()) / (x.max() - x.min()) if (x.max() - x.min()) != 0 else 0
+        )
         
         # Transformar a float32 para reducir consumo de memoria
         df_archivo_g2["Potencia_aparente"] = df_archivo_g2["Potencia_aparente"].astype("float32")
@@ -307,6 +315,7 @@ def generar_entregables_por_cliente(**kwargs):
 
     # Definir path de salida para los entregables
     path_entregables = "/opt/airflow/outputs"
+    path_curvas_tipo = '/opt/airflow/outputs/curvas_tipo'
 
     # Unificar en un solo diccionario y liberar memoria
     dict_todos_los_clientes = dict_dfs_procesados_g1 | dict_dfs_procesados_g2
@@ -328,10 +337,14 @@ def generar_entregables_por_cliente(**kwargs):
         # Crear el directorio para los entregables (Si no existe)
         if not os.path.exists(dir_entregables_cli):
             os.makedirs(os.path.normpath(dir_entregables_cli))
+            
+        # Crear el directorio para las curvas tipo (Si no existe)
+        if not os.path.exists(path_curvas_tipo):
+            os.makedirs(os.path.normpath(path_curvas_tipo))
 
         # Generar el archivo con los datos de la curva tipo
         df_curva_tipo = obtener_coords_curva_tipo(df_medicion_anual)
-        df_curva_tipo = agrupar_30_min(df_curva_tipo)
+        #df_curva_tipo = agrupar_30_min(df_curva_tipo)
         df_curva_tipo.to_csv(f"{dir_entregables_cli}/datos_curva_tipo_{cliente}.csv", index=False)
 
         # Guardar los datos en una lista

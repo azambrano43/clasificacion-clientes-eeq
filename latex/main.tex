@@ -8,12 +8,16 @@
 \usepackage{setspace}
 \usepackage{caption}
 \captionsetup[table]{width=\textwidth}
+\captionsetup[figure]{belowskip=-20pt}
 \usepackage{fancyhdr}
 \usepackage{hyperref}
 \usepackage{titletoc}
 \usepackage{amsfonts}
 \usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
 \usepackage{graphicx}
+\usepackage{float}
 \usepackage[table]{xcolor}
 \usepackage[spanish]{babel}
 \addto\captionsspanish{\renewcommand{\figurename}{Figura}}
@@ -33,6 +37,7 @@
 \usepackage{url}
 \usepackage{xcolor}
 \newcommand{\headlinecolor}{\color{black}}
+
 
 
 % Márgenes y espaciado
@@ -66,7 +71,7 @@
 
 \pagenumbering{gobble} % ELIMINA NUMERACION EN PORTADA
 \begin{titlepage}
-\renewcommand{\baselinestretch}{1.4}\normalsize
+\renewcommand{\baselinestretch}{1.45}\normalsize
 
 \newgeometry{left=3cm,right=3cm,top=3cm,bottom=3cm}
 \centering
@@ -479,7 +484,7 @@ MongoDB Atlas 8.0.13 & Es una base de datos no relacional administrada en nube, 
 \section{Caso de estudio}
 Unos de los grandes desafíos que enfrenta la Empresa Eléctrica Quito (EEQ) es la administracion eficiente de la demanda de sus clientes, especialmente la de aquel segmento que no está regulado, este grupo de clientes es estratégico debido a su representativo nivel de consumo y a la variablidad de sus patrones de carga. Estos usuarios, no están incluidos en un esquema tarifario regulado, por lo cual exhiben una gran diversidad en sus curvas de demanda. Esto obstaculiza enormemente la planificación energética y el diseño de estrategias destinadas a asegurar eficiencia y fiabilidad en el sistema eléctrico.\\
 
-Los métodos tradicionales que han sido utilizado en la EEQ con el fin de examinar el comportamiento de la demanda (basados principalmente en clasificaciones rígidas o en el cálculo de promedios), han demostrado importantes limitaciones al no conseguir captar la complejidad de los patrones de consumo. En investigaciones anteriores realizadas por Gerencia de Planificación, se ha confirmado esta circunstancia. Los estudios mostraron que el comportamiento energético está directamente relacionado con la actividad económica del cliente no regulado y a su curva de carga característica, lo cual hace inviable que un único criterio generalizado represente apropiadamente a todo este conjunto.\\
+Los métodos tradicionales que han sido utilizado en la EEQ con el fin de examinar el comportamiento de la demanda (basados principalmente en clasificaciones rígidas o en el cálculo de promedios), han demostrado importantes limitaciones al no conseguir captar la complejidad de los patrones de consumo. En investigaciones anteriores realizadas por Gerencia de Planificación, se ha confirmado esta circunstancia. Los estudios mostraron que el comportamiento energético está directamente relacionado con la actividad económica del cliente no regulado y a su curva de carga característica, lo cual hace inviable que un único criterio generalizado represente apropiadamente a todo este conjunto.
 
 \section{Brainstorming}
 La lluvia de ideas, también conocida como brainstorming, es un método que se emplea en el campo de la ingeniería de requisitos y la investigación para recopilar información de manera colaborativa. Esto facilita determinar necesidades, cuestiones problemáticas y posibles perspectivas de solución deurante las etapas iniciales de un proyecto. Su valor metodológico radica en su capacidad de permitir reunir un conjunto extenso de percepciones, las cuales pueden ser organizadas y analizadas con más rigor posteriormente, convirtiéndose así en un insumo fundamental para determinación del enfoque metodológico \cite{Weichbroth2016}.\\
@@ -684,17 +689,8 @@ El tercer gráfico (inferior izquierdo) es un diagrama de caja que muestra la va
 \subsubsection*{Verificar calidad de los datos}
 Dado que en tareas anteriores se identificaron de manera superficial inconsistencias en los archivos de medición, tales como la variación en los formatos de fecha, uso de coma como separador de miles y la ausencia de registros, se llevó a cabo una comprobación de su calidad haciendo énfasis en los aspectos mencionados anteriormente. Esta tarea posibilitó determinar el grado de completitud, coherencia y consistencia de los datos antes de proceder con su preparación.\\
 
-Se llevaron a cabo varias comprobaciones con el objetivo de cuantificar y observar el impacto generado de estas anomalías sobre el conjunto de datos. Para ello, se elaboró una imagen que resume los resultados obtenidos en términos de uniformidad de formato, consistencia numérica y presencia de valores nulos y ausentes.\\
+Se llevaron a cabo varias comprobaciones con el objetivo de cuantificar y observar el impacto generado de estas anomalías sobre el conjunto de datos. Para ello, se elaboró una imagen que resume los resultados obtenidos en términos de uniformidad de formato, consistencia numérica y presencia de valores nulos y ausentes.
 
-La Figura \ref{fig:fig_verif_cal_datos} contiene cuatro gráficos de barras que representan los resultados del análisis de la calidad de los datos:
-\begin{itemize}
-    \item Distribución de registros según el formato de fecha que contienen.
-    \item Número de registros que presentan la coma como separador de miles en cada grupo de clientes.
-    \item Cantidad de clientes agrupados por intervalos según la completitud de sus registros [70\%, 85\%] y [85\%, 100\%] respecto al total ideal de 35040 registros.
-    \item Número de registros nulos o sin valor identificados en cada grupo de clientes.
-\end{itemize}
-
-\clearpage
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[scale=0.39]{./imgs/verif_cal_datos.png}
@@ -702,6 +698,16 @@ La Figura \ref{fig:fig_verif_cal_datos} contiene cuatro gráficos de barras que 
 \label{fig:fig_verif_cal_datos}
 \end{center}
 \end{figure}
+
+\clearpage La Figura \ref{fig:fig_verif_cal_datos} contiene cuatro gráficos de barras que representan los resultados del análisis de la calidad de los datos:
+\begin{itemize}
+    \item Distribución de registros según el formato de fecha que contienen.
+    \item Número de registros que presentan la coma como separador de miles en cada grupo de clientes.
+    \item Cantidad de clientes agrupados por intervalos según la completitud de sus registros [70\%, 85\%] y [85\%, 100\%] respecto al total ideal de 35040 registros.
+    \item Número de registros nulos o sin valor identificados en cada grupo de clientes.
+\end{itemize}
+
+
 
 Como se puede apreciar en el primer gráfico (superior izquierdo), el formato más común es el YYYY-MM-DD (66,3\%), seguido por YYYY/MM/DD (21,4\%) y DD/MM/YYYY (12,2\%). Esta falta de uniformidad en el formato de fecha es crítico debido a que para construir series temporales se debe tener un formato único, se requerirá un proceso de estandarización de formato de fecha para solucionarlo.\\
 
@@ -725,7 +731,7 @@ El uso de Apache Airflow permitió construir un pipeline totalmente modularizado
 \end{figure}
 
 
-\clearpage
+
 Para la implementación, Apache Airflow fue desplegado en contenedores Docker utilizando la imagen oficial, la cual configura varios servicios, entre ellos, los fundamentales para el funcionamiento de Airflow \cite{airflow_docs}:
 
 \begin{itemize}
@@ -767,15 +773,15 @@ Dentro de la CLI de cada servicio, se hizo uso del comando \texttt{python -m pip
 
 Una vez establecido el ambiente de ejecución con sus respectivas dependencias, se estructuró el proceso ETL dentro de un grafo acíclico dirigido (DAG) denominado \texttt{etl\_dag\_datos\_consumo}. Cada nodo que se encuentra en el grafo simboliza una tarea autónoma dentro del proceso ETL, ejecutada de manera secuencial o paralela en función de las dependencias que tenga definidas.\\
 
-La Figura \ref{fig:dag_etl_process} presenta el DAG diseñado para el presente análisis, compuesto por las diferentes tareas:
+La orquestación general de este DAG en Apache Airflow se muestra en la Figura \ref{fig:dag_etl_process}, donde se evidencia el flujo de ejecución y la relación de dependencia entrre las diferentes tareas que lo componen. A continuación se describe de manera general el propósito de cada tarea que integra dicho proceso:
 
 \begin{itemize}
-    \item extraer\_datos\_grupo01: lee y consolida los archivos mensuales de los clientes que tienen mediciones correspondientes a demanda activa y reactiva.
-    \item extraer\_datos\_grupo02: lo mismo que la tarea anterior con la diferencia que lo realiza para los clientes que tienen mediciones de energía aparente.
+    \item extraer\_datos\_grupo01: lee y consolida los archivos mensuales de los clientes que tienen mediciones correspondientes a demanda activa y reactiva medidas en un intervalo de 15 minutos.
+    \item extraer\_datos\_grupo02: lo mismo que la tarea anterior con la diferencia que lo realiza para los clientes que tienen mediciones de energía medidas igualmente en un intervalo de 15 minutos.
     \item transformar\_datos\_grupo01 y transformar\_datos\_grupo02: para cada grupo, se encargan de la limpieza, estandarización, normalización y cálculo de la potencia aparente de los datos.
-    \item transformar\_datos\_unificados\: unifica todos los datos a partir de los conjuntos procesados de los dos grupos, lo que da como resultado un DataFrame consolidado de curvas tipo.
-    \item cargar\_datos\_curvas\_tipo\: lleva a cabo el formateo final y carga el conjunto de datos consolidado en la base de datos de MongoDB Atlas.
-    \item generar\_entregables\_por\_cliente\: no es parte del proceso ETL como tal, genera archivos requeridos por la EEQ, tales como curva tipo, curva de demanda máxima y archivos .csv con sus respectivas coordenadas.
+    \item transformar\_datos\_unificados: unifica todos los datos a partir de los conjuntos procesados de los dos grupos, dando como resultado un DataFrame consolidado que contiene las curvas tipo de todos los clientes.
+    \item cargar\_datos\_curvas\_tipo: lleva a cabo el formateo final y carga el conjunto de datos consolidado en la base de datos de MongoDB Atlas.
+    \item generar\_entregables\_por\_cliente: no es parte del proceso ETL como tal, genera archivos requeridos por la EEQ, tales como curva tipo, curva de demanda máxima y archivos .csv con sus respectivas coordenadas.
 \end{itemize}
 
 \begin{figure}[ht]
@@ -785,6 +791,18 @@ La Figura \ref{fig:dag_etl_process} presenta el DAG diseñado para el presente a
 \label{fig:dag_etl_process}
 \end{center}
 \end{figure}
+
+La Figura \ref{fig:etl_definition} ofrece un desglose funcional del proceso ETL implementado, con el propósito de complementar la vista general de la Figura \ref{fig:dag_etl_process}.
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.61]{./imgs/ETL_DEFINITION.png}
+\caption{{Desglose operacional del DAG de ETL: descripción de tareas.}}
+\label{fig:etl_definition}
+\end{center}
+\end{figure}
+
+En la Figura \ref{fig:etl_definition} esta se describen las operaciones concretas que cada tarea realiza durante las fases de extracción, transformación y carga de datos, así como las tareas que integran el DAG. Este desglose permite especificar el alcance de cada tarea sobre el conjunto de datos y así brindar un marco organizado para la elaboración detallada de los procesos de selección, limpieza, construcción, integración y formateo de los datos que se describen en las siguientes secciones.
 
 \subsubsection*{Seleccionar los datos}
 En esta tarea, se seleccionaron los conjuntos de datos que se usarían en las etapas siguientes del análisis, garantizando que coincidieran con las metas establecidas en la fase de entendimiento del negocio. Los datos se obtuvieron de los registros históricos de mediciones mensuales de los clientes no regulados de la EEQ, correspondientes a 2023.\\
@@ -804,16 +822,6 @@ Como resultado de las tareas de extracción de los datos se obtuvieron los dicci
     \item La clave es el identificador del cliente, puede ser su nombre designado o un código numérico
     \item El valor asociado a cada clave es un DataFrame que contiene todos los registros anuales consolidados de dicho cliente
 \end{itemize}
-
-La Figura \ref{fig:selec_datos} ilustra el flujo de las tareas de extracción y selección de datos dentro del DAG:
-
-\begin{figure}[ht]
-\begin{center}
-\includegraphics[scale=0.34]{./imgs/selec_datos.png}
-\caption{{Esquematización de entrada y consolidación de datos}}
-\label{fig:selec_datos}
-\end{center}
-\end{figure}
 
 \subsubsection*{Limpiar los datos}
 La tarea de limpieza tuvo como objetivo asegurar que los registros de medición fueran coherentes, corrigiendo errores estructurales y preparando la información durante el proceso de transformación. Esta estapa de limpieza se llevó a cabo en las tareas \texttt{transformar\_datos\_grupo01} y \texttt{transformar\_datos\_grupo02} que son parte del DAG \texttt{etl\_dag\_datos\_consumo} y que fueron ejecutadas independientemente para cada grupo de clientes respectivamente.\\
@@ -852,7 +860,17 @@ Se decidió implementar un escalado individual para cada día de cada cliente, y
     S_{\text{escalada}} = \frac{S - S_{\text{min}}}{S_{\text{max}} - S_{\text{min}}}
 \end{equation}
 
-La normalización es esencial, debido a que posibilita que los algoritmos de clustering se enfoquen únicamente en la forma de la curva de consumo y no en su magnitud, evitando que clientes cuyas demandas son altas alteren los resultados del análisis.
+La normalización es esencial, debido a que posibilita que los algoritmos de clustering se enfoquen únicamente en la forma de la curva de consumo y no en su magnitud, evitando que clientes cuyas demandas son altas alteren los resultados del análisis.\\
+
+La elección de escalar cada día individualmente fue el resultado de llevar a cabo un estudio comparativo entre la normalización global del año entero y la normalización diaria que se empleó. La Figura \ref{fig:comparacion_normalizacion} muestra que la normalización global tiende a suavizar la curva característica debido a que hay días con valores significativamente más altos que el resto. El comportamiento mencionado anteriormente es particularmente común en clientes no regulados, cuyos patrones de consumo son muy variables debido a que están directamente relacionados a su actividad económica. Por otro lado, la normalización diaria mantiene la estructura relativa de cada día, evitando así que un día con valores mayores ``aplane'' la curva, dando como resultado una representación más precisa del patrón característico asociado al cliente.
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[scale=0.48]{./imgs/curva_tipo_norm_diaria_vs_global.png}
+\caption{{Comparación entre la curva tipo resultante de aplicar normalización diaria y normalización global.}}
+\label{fig:comparacion_normalizacion}
+\end{center}
+\end{figure}
 
 \subsubsection*{Integrar los datos}
 Una vez concluido todo el proceso de transformación individual de cada grupo de clientes (selección, limpieza y construcción), se procedió a unificar los datos procesados que provenían de los dos grupos establecidos, con el fin de consolidar un único conjunto global y proceder con el cálculo de sus curvas características representativas anuales. La integración fue realizada en la tarea \texttt{transformar\_datos\_unificados} que es parte del DAG \texttt{etl\_dag\_datos\_consumo}, donde se combinaron los diccionarios resultantes de los flujos de transformación individuales de cada grupo en uno solo.\\
@@ -873,35 +891,222 @@ Para concluir la fase de preparación de los datos, se realizaron las modificaci
 
 Finalmente, se creó un índice sobre el campo 'Cliente' con el fin de optimizar consultas dentro de la base de datos y se procedió a cargar los registros en la colección CurvasTipoAnuales, dando por finalizada la fase de preparación de los datos y obteniendo así un conjunto de datos totalmente limpio, estructurado, formateado y preparado para su uso en la fase de modelado. 
 
-\subsection{Flujo de trabajo propuesto}
-
-\begin{itemize}
-    \item \textbf{Extracción, Transformación y Carga de los Datos (ETL):}  
-    La primera fase consiste en la extracción, transformación y carga (ETL) de los datos de consumo energético. Los datos iniciales provienen de archivos de consumo mensual por cliente. En este paso, se construye un archivo anual para cada cliente, en el cual se agregan y consolidan los datos correspondientes a cada año. Además, los datos son escalados y normalizados para garantizar su consistencia y comparabilidad. Este proceso se lleva a cabo con la ayuda de \textbf{Apache Airflow}, el cual permite automatizar el flujo de trabajo y garantizar su ejecución eficiente. Finalmente, los datos transformados son cargados en \textbf{MongoDB}, asegurando su disponibilidad para las fases siguientes del análisis.
-
-    \item \textbf{Segmentación de Clientes:}  
-    En esta fase, se procede a definir el número óptimo de grupos de clientes a través de un análisis conversacional con las partes interesadas y la aplicación de métodos como el \textbf{método del codo}. Una vez definido el número de grupos, se seleccionan y optimizan los algoritmos de agrupación más adecuados para el análisis, tales como \textbf{KMeans}, \textbf{GaussianMixture}, \textbf{Birch} y \textbf{Spectral Clustering}. Estos algoritmos se utilizan para agrupar a los clientes según la similitud de sus curvas de consumo energético anual. Los resultados obtenidos se presentan visualmente, permitiendo observar las agrupaciones y patrones emergentes en el consumo de energía de los clientes.
-
-    \item \textbf{Evaluación Comparativa de los Algoritmos:}  
-    Finalmente, se realiza una evaluación comparativa de los algoritmos de agrupación aplicados, utilizando diversas métricas para medir la calidad de las agrupaciones. Entre las métricas utilizadas se encuentran el \textbf{Silhouette Score}, \textbf{SSE (Suma de Errores al Cuadrado)}, \textbf{DBI (Índice de la Diferencia de Davies-Bouldin)} y \textbf{CHI (Índice de Calinski-Harabasz)}. Estas métricas permiten analizar el rendimiento de los algoritmos y seleccionar el que mejor se adapte a los datos de consumo energético de los clientes.
-\end{itemize}
-
-
-\begin{enumerate}
-     
-
-\item \textbf{Proceso ETL}\\
-El primer proceso consiste en el desarrollo de un flujo ETL bajo el marco de trabajo de Apache Airflow, este proceso nos permitirá estructurar y preparar los datos de consumo de los clientes en curvas anuales características para su posterior análisis de agrupación. La \autoref{fig:fig1} ilustra de manera detallada todas las etapas que abarca este proceso.\\
-
-\renewcommand{\thefigure}{\arabic{figure}}
+\subsection{Modelado}
+El fase de modelado es el núcleo de CRISP-DM, en la que se crean los modelos a partir del conjunto de datos ya preparado. En esta fase, la comprensión de los datos y del negocio se traduce en un grupo de algoritmos que pueden detectar patrones de consumo a partir de las curvas de carga características generadas en la fase anterior. Siguiendo la guía de CRISP-DM, es necesario escoger la técnica de modelado que se va a utilizar y determinar como se van a valorar los resultados antes de implementar cualquier modelo. Después se desarrollan los modelos y se examinan sus resultados de acuerdo con los criteros técnicos y del negocio.
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[scale=0.7]{./imgs/ETL_process.png}
-\caption{{Proceso ETL con sus etapas}}
-\label{fig:fig1}
+\includegraphics[scale=0.665]{./imgs/Clustering_process.png}
+\caption{{Esquematización de proceso de agrupación y sus etapas.}}
+\label{fig:proceso_agrupacion}
 \end{center}
 \end{figure}
+
+La Figura \ref{fig:proceso_agrupacion} representa un diagrama que sintetiza las diversas tareas que intervienen en el proceso de agrupación utilizado en el presente trabajo. Este diagrama fue creado en base al cuaderno de trabajo utilizado para realizar clustering, se ilustra la secuencia de trabajo que se implementó: obtener las curvas desde la base de datos, ajustarlas para comparabilidad, determinar el número óptimo de agrupaciones, elegir los algoritmos y optimizar sus parámetros, aplicar los algoritmos y generar las agrupaciones para evaluarlas en base a métricas y seleccionar el algoritmo y los resultados más apropiado.
+
+\subsubsection*{Seleccionar técnica de modelado}
+De acuerdo con la metodología CRISP-DM, la selección de la técnica de modelado busca identificar los algoritmos más adecuados para abordar el problema. Esto se hace considerando los objetivos del análisis y la naturaleza de los datos. En este estudio, el objetivo del modelado es segmentar a los clientes no regulados del sector eléctrico según la forma de su curva de carga característica anual. \\
+
+El problema se enmarca en el aprendizaje no supervisado debido a que las curvas de carga son series temporales normalizadas que detallan la conducta energética de los clientes. Los algoritmos de agrupamiento son una opción ampliamente validada para detectar patrones de consumo energético. La agrupación de usuarios con comportamientos semejantes y el análisis de la demanda desde un punto de vista tanto operativo como de planificación son posibles gracias al clustering aplicado a perfiles de carga, según han demostrado varias investigaciones \cite{Rajabi2019ComparativeClusteringLoad,Chicco2012OverviewClustering}.\\
+
+Con el fin de comparar el rendimiento de varios enfoques de agrupamiento sobre un mismo conjunto de datos, se eligieron cuatro algoritmos que pertenecen a distintas familias metodológicas: K-Means, Gaussian Mixture, Birch y Sepctral Clustering. A continuación se explica por qué hemos elegido cada uno de estos algoritmos para el presente trabajo:
+
+\begin{enumerate}
+    \item K-Means: Se eligió el algoritmo K-Means por su uso extenso en aplicaciones eléctricas, sobre todo para segmentar perfiles de consumo y obtener curvas de carga que sean representativas. Según \cite{Miraftabzadeh2023KMeansPowerSystems}, K-Means es un referente básico en las investigaciones de agrupamiento de la demanda eléctrica, debido a su sencillez, su eficiencia computacional y lo fácil que es analizar los resultados. K-Means es un modelo apropiado para iniciar la evaluación de agrupaciones de curvas de carga normalizadas en el marco de este trabajo, pues posibilita reconocer grupos de clientes con conductas semejantes de manera directa. Además, su inclusión posibilita establecer una línea de referencia para comparar el rendimiento de algoritmos más complejos, como sugieren los estudios comparativos sobre técnicas de segmentación de patrones de carga \cite{Rajabi2019ComparativeClusteringLoad}.
+    \item Gaussian Mixture: Se eligió el modelo de mezclas gaussianas como un enfoque probabilístico alternativo al método K-Means, que se basa en centroides. La literatura indica que los patrones de consumo eléctrico pueden tener superposiciones entre grupos, sobre todo en clientes cuyos comportamientos son cambiantes, lo cual puede restringir la eficacia de los métodos estrictamente deterministas \cite{Kallel2025ClusteringInterpretability}. Gaussian Mixture Model posibilita determinar si una representación probabilística de los clústeres proporciona un perfil más preciso de las curvas de carga de los clientes no regulados. Considerar su inclusión es relevante para examinar situaciones en las que los patrones de consumo no están bien definidos, lo cual es frecuente en este tipo de clientes, según se ha reportado en investigaciones anteriores \cite{Rajabi2019ComparativeClusteringLoad}.
+    \item Birch: Se eligió el algoritmo Birch por su capacidad de gestionar conjuntos extensos de datos con eficiencia y por su método jerárquico. Según la literatura, Birch es particularmente eficaz en aplicaciones que necesitan estabilidad y escalabilidad ante variaciones moderadas en los datos. Esto sucede, por ejemplo, en las investigaciones sobre consumo de electricidad con diversos clientes y mediciones temporales \cite{Miraftabzadeh2023KMeansPowerSystems}. Birch posibilita la evaluación de un método alternativo de agrupamiento que no se basa solamente en la minimización de distancias globales; más bien, va construyendo una estructura resumida de los datos, lo cual permite examinar si un enfoque jerárquico posibilita la identificación de patrones de consumo que podrían no ser evidentes a través de algoritmos que se basan en centroides o en probabilidad.
+    \item Spectral Clustering: Con el fin de analizar un método que se basa en relaciones de similitud más sofisticadas entre las curvas de carga, se eligió finalmente el algoritmo Spectral Clustering. Según la literatura, este tipo de algoritmos es especialmente eficaz en casos donde la estructura de los datos no muestran separaciones lineales, lo cual puede ocurrir en perfiles de consumo eléctrico con conductas parecidas a lo largo de distintos intervalos de tiempo \cite{Rajabi2019ComparativeClusteringLoad}. Spectral Clustering posibilita examinar si la representación de las curvas de carga como un grafo de similitudes favorece una segmentación más lógica en lo que respecta a la forma de la curva. Su incorporación completa los métodos anteriores y posibilita una comparación más exhaustiva entre diferentes métodos de agrupamiento, como lo indican las últimas revisiones en aplicaciones de agrupamiento para sistemas eléctricos \cite{Miraftabzadeh2023KMeansPowerSystems}.
+\end{enumerate}
+
+\subsubsection*{Generar diseño de prueba}
+Según la metodología CRISP-DM, el propósito de crear un diseño de prueba es establecer un esquema de evaluación que posibilite examinar la calidad de los modelos de agrupamiento. Dado que este trabajo aborda un problema de aprendizaje no supervisado aplicado a curvas de carga eléctricas, la validación de los modelos se lleva a cabo utilizando métricas internas de calidad de agrupamiento, debido a que no se cuentan con etiquetas estándar.\\
+
+El diseño de prueba tiene como objetivo analizar la capacidad de los algoritmos elegidos para agrupar a los clientes no regulados en conjuntos homogéneos, según la forma que presente su curva de carga característica anual. Con el fin de asegurar que los resultados sean comparables, se ejecutan todos los algoritmos sobre un conjunto de datos preprocesados idéntico, obtenidos como resultado de la fase de preparación de los datos.\\
+
+Dado que el objetivo del análisis es encontrar similitudes en la estructura de las curvas de carga, se enfoca el diseño de la prueba en evaluar la consistencia interna y la separación entre los clústeres a través de métricas internas de validación. La Tabla \ref{tab:metricas_definicion} muestra la selección y justificación de las métricas utilizadas, conforme a la bibliografía especializada en la agrupación de perfiles de carga eléctrica.\\
+
+\begin{longtable}{|p{2.5cm}|p{12cm}|}
+\caption{Métricas utilizadas para el diseño de prueba y evaluación de los algoritmos de agrupamiento}
+\label{tab:metricas_definicion} \\
+\hline
+\textbf{Métrica} & \textbf{Descripción y propósito} \\
+\hline
+\endfirsthead
+
+\hline
+\textbf{Métrica} & \textbf{Descripción y propósito} \\
+\hline
+\endhead
+
+\hline
+\endfoot
+
+\hline
+\endlastfoot
+
+Correlación intra--clúster &
+Calcula el promedio de similitud entre cada curva de carga individual y la curva media del clúster correspondiente. Al fundamentarse en la correlación, posibilita una evaluación directa de la semejanza entre las curvas, sin importar su tamaño. Esta métrica es particularmente apropiada para el estudio de perfiles de carga normalizados, cuyo propósito principal es detectar patrones de consumo que sean semejantes a lo largo del tiempo y analizar la uniformidad interna de cada conjunto \cite{Chicco2012OverviewClustering,labeeuw2013residential}. \\
+\hline
+
+Silhouette Score &
+Analiza la calidad de la asignación de cada curva de carga a su clúster respectivo, teniendo en cuenta al mismo tiempo el agrupamiento interno del clúster y la distancia con respecto a los clústeres adyacentes. Los valores oscilan entre -1 y 1, siendo los que están más cerca de 1 un indicativo de una mejor asignación. En el contexto de las curvas de carga eléctrica, esta métrica posibilita examinar la separación global entre agrupaciones, si bien puede mostrar valores moderados como resultado del superposición natural de los patrones de consumo \cite{Chicco2012OverviewClustering}. \\
+\hline
+
+Índice Davies--Bouldin (DBI) &
+Cuantifica la relación entre la distancia entre los clústeres y su dispersión interna, penalizando a los agrupamientos con clústeres poco compactos o que están muy próximos. Valores más bajos del índice señalan una mejor calidad de agrupamiento. Este índice se ha empleado en investigaciones de segmentación de datos eléctricos y series temporales, incluso en aplicaciones concretas sobre perfiles de carga, gracias a su aptitud para analizar simultáneamente la separación y compacidad \cite{li2023shapebased,halkidi2001clusteringvalidation}. \\
+\hline
+
+Índice Calinski--Harabasz (CHI) &
+Evalúa la correlación entre la variabilidad intra-clúster y la variabilidad inter-clúster, priorizando agrupaciones donde los clústeres tienen cohesión interna alta y una separación global adecuada. Valores más altos del índice señalan agrupaciones mejor definidas. Se utiliza esta medida frecuentemente como criterio adicional en la validación interna de algoritmos de agrupamiento y se ha usado en investigaciones sobre segmentación de perfiles de carga eléctrica y análisis de datos energéticos \cite{Chicco2012OverviewClustering,li2023shapebased}. \\
+\hline
+
+\end{longtable}
+
+
+\subsubsection*{Construir el modelo}
+El modelo se construye mediante la implementación práctica de las técnicas de agrupamiento elegidas, siguiendo un flujo de trabajo lógico y organizado.
+
+\begin{enumerate}
+    \item Obtención de los datos\\ 
+    Se emplearon las curvas de carga anuales características que se obtuvieron durante la etapa de preparación de los datos como insumos. Cada cliente no regulado está representado por una curva normalizada, que se crea a partir de datos históricos y se organiza en una matriz. En esta matriz, cada fila corresponde a un cliente y cada columna a un momento específico en el tiempo de la curva de carga. La Figura \ref{fig:cm_obtencion_datos} muestra la estructura de esta matriz:
+    \begin{figure}[ht]
+    \begin{center}
+    \includegraphics[scale=0.438]{./imgs/obtencion_datos.png}
+    \caption{{Datos de curvas de carga obtenidas desde MongoDB Atlas.}}
+    \label{fig:cm_obtencion_datos}
+    \end{center}
+    \end{figure}
+    \item Ajuste de curvas\\
+    Se llevó a cabo un ajuste adicional de las curvas de carga con la finalidad de asegurar la comparabilidad entre las curvas de carga de los clientes y evitar sesgos relacionados con desplazamientos en el eje Y. Este ajuste implicó mover cada curva de forma que su punto de partida sea ubicado aproximadamente en el origen (0,0), empleando el promedio de los primeros $n$ registros de cada serie como referencia, lo cual permite reducir sesgos puntuales atribuído a fluctuaciones al inicio de la curva. Después, se sustrajo ese valor de cada uno de los puntos de la curva, manteniendo su forma relativa. Así, los algoritmos de agrupamiento son capaces de detectar semejanzas basándose únicamente en la forma que tiene la curva de carga.\\  \\
+    La Figura \ref{fig:cm_ajuste_curvas} demuestra que, gracias al ajuste mencionado anteriormente, se eliminan los desfases en el eje Y, conservando solo la forma relativa de cada curva. Este procedimiento asegura que las curvas de carga sean comparables y posibilita que los algoritmos de clustering se basen únicamente en la semejanza de las curvas al realizar la agrupación.
+    \begin{figure}[ht]
+    \begin{center}
+    \includegraphics[scale=0.438]{./imgs/cm_curvas_sinajustar_vs_ajustada.png}
+    \caption{{Efecto del ajuste vertical de las curvas de carga para garantizar la comparabilidad basada en la forma (tres clientes).}}
+    \label{fig:cm_ajuste_curvas}
+    \end{center}
+    \end{figure}
+    
+    Además, no se usaron en este periodo métodos de disminución de la dimensionalidad, como el Análisis de Componentes Principales (PCA), para mantener las propiedades temporales originales de las curvas de carga. Esta decisión se basa en lo demostrado en \cite{jain2021validating}: al analizar esquemas de agrupamiento para perfiles de demanda eléctrica, tanto con reducción de dimensionalidad como sin ella, utilizando datos reales de medidores inteligentes, concluyeron que no utilizar estos métodos permite mantener información importante relacionada a la manera y los patrones horarios del consumo, lo cual ayuda a conseguir agrupaciones más estables y representativas.
+
+    \item Definición y validación del número de clústeres\\Desde el punto de vista del negocio, la parte interesada manifestó la necesidad de obtener cuatro agrupaciones, esto debido a estudios estadísticos realizados anteriormente. El método del codo se utilizó para validar esta decisión desde una perspectiva técnica, analizando cómo la suma de errores cuadráticos intra-clúster (SSE) cambiaba en función de la cantidad de clústeres. La Figura \ref{fig:cm_elbow_method} revela que la disminución de la inercia empieza a estabilizarse desde K=4, lo cual demuestra un punto de inflexión evidente en la curva. Este hallazgo valida el número de clústeres que la parte interesada ha solicitado, al corroborar que cuatro agrupaciones representan un balance apropiado entre la simplicidad del modelo y la compacidad interna.
+    \begin{figure}[H]
+    \begin{center}
+    \includegraphics[scale=0.63]{./imgs/cm_elbow_method.png}
+    \caption{{Validación del número de clústeres utilizando el método del codo sobre las curvas de carga ajustadas.}}
+    \label{fig:cm_elbow_method}
+    \end{center}
+    \end{figure}
+    \item Hiperparametrización de los algoritmos\\ 
+    Se realizó un proceso de hiperparametrización para cada uno de los algoritmos de agrupamiento elegidos, después de haber establecido el número de clústeres. Este procedimiento consistió en evaluar diferentes combinaciones de parámetros significativos para cada algoritmo, como los criterios de inicialización, el número máximo de iteraciones y parámetros particulares vinculados a cada algoritmo. La Tabla \ref{tab:param_grid_clustering} sintetiza los hiperparámetros más importantes que se tuvieron en cuenta durante el proceso de ajuste, los cuales fueron elegidos según su efecto en la calidad de las agrupaciones.
+
+    \begin{longtable}{|p{4cm}|p{3.2cm}|p{6.4cm}|}
+    \caption{Hiperparámetros evaluados para los algoritmos de clustering}
+    \label{tab:param_grid_clustering} \\
+    \hline
+    \textbf{Algoritmo} & \textbf{Parámetro} & \textbf{Valores evaluados} \\
+    \hline
+    \endfirsthead
+
+    \hline
+    \textbf{Algoritmo} & \textbf{Parámetro} & \textbf{Valores evaluados} \\
+    \hline
+    \endhead
+
+    \hline
+    \endfoot
+
+    \hline
+    \endlastfoot
+
+    \multirow{3}{*}{K-Means} 
+    & n\_clusters & 4 \\
+    & init & \texttt{k-means++}, \texttt{random} \\
+    & n\_init & 1, 2, 3, 5, 10, 20, 30 \\
+    \hline
+
+    \multirow{3}{*}{Gaussian Mixture} 
+    & n\_components & 4 \\
+    & covariance\_type & \texttt{full}, \texttt{diag}, \texttt{spherical}, \texttt{tied} \\
+    & n\_init & 1, 2, 3, 5, 10, 20 \\
+    \hline
+
+    \multirow{3}{*}{BIRCH} 
+    & n\_clusters & 4 \\
+    & threshold & 0.05, 0.075, 0.10, 0.125, 0.15, 0.20 \\
+    & branching\_factor & 10, 20, 25, 30, 40, 50 \\
+    \hline
+
+    \multirow{4}{*}{Spectral Clustering} 
+    & n\_clusters & 4 \\
+    & affinity & \texttt{nearest\_neighbors} \\
+    & n\_neighbors & 4, 6, 8, 10, 15, 25, 35 \\
+    & eigen\_solver & \texttt{arpack}, \texttt{amg} \\
+    \hline
+
+    \end{longtable}
+
+    La selección de los hiperparámetros óptimos se realizó utilizando métricas internas de validación, priorizando aquellas configuraciones que maximizaran la homogeneidad interna de los clústeres. De esta manera, se garantizó que cada algoritmo fuera evaluado bajo condiciones ajustadas a las características de las curvas de carga analizadas.
+
+    \item Aplicación de los algoritmos\\
+    Se implementaron los algoritmos Birch, K-Means, Gaussian Mixture Model y Spectral Clustering en el conjunto de curvas de carga ajustadas una vez establecidos los hiperparámetros. En consecuencia, cada algoritmo le otorgó a cada cliente una etiqueta de clúster, lo que produjo cuatro grupos por técnica.
+\end{enumerate}
+\subsubsection*{Evaluar el modelo}
+Con la finalidad de medir la calidad de los agrupamientos logrados y cotejar el rendimiento de los diferentes algoritmos, se llevó a cabo la evaluación de los modelos de clustering a través de métricas internas de validación.
+
+\begin{itemize}
+    \item Correlación intra-clúster\\
+    Se empleó la correlación intra-clúster como la métrica principal de evaluación, que se define como el promedio de la correlación entre cada curva de carga individual y la correspondiente curva media del clúster. Esta métrica posibilita la evaluación directa de la semejanza en la forma de las curvas agrupadas, lo que resulta particularmente apropiado para series temporales normalizadas.\\ \\
+    La correlación es una medida sólida para analizar la coherencia interna de los clústeres a partir de perfiles de carga eléctrica, porque se enfoca en las similitudes estructurales de las curvas y no en su magnitud absoluta \cite{labeeuw2013residential,Chicco2012OverviewClustering}.
+    \item Métricas complementarias de validación\\
+    En un enfoque complementario, se usaron el índice de Calinski-Harabasz (CHI), el de Davies-Bouldin (DBI) y el Silhouette Score, tres métricas que se usan con frecuencia para medir la separación entre los clústeres y su compacidad interna \cite{Chicco2012OverviewClustering,li2023shapebased}.\\ \\
+    La Tabla \ref{tab:metricas_clustering} muestra una comparación numérica del rendimiento de cada algoritmo de agrupamiento, teniendo en cuenta las métricas complementarias y la correlación dentro del clúster.
+
+    \begin{longtable}{|l|c|c|c|c|}
+    \caption{Resultados de las métricas de evaluación para los algoritmos de clustering}
+    \label{tab:metricas_clustering} \\
+    \hline
+    \textbf{Métrica} & \textbf{K-Means} & \textbf{GMM} & \textbf{Birch} & \textbf{Spectral} \\
+    \hline
+    \endfirsthead
+
+    \hline
+    \textbf{Métrica} & \textbf{K-Means} & \textbf{GMM} & \textbf{Birch} & \textbf{Spectral} \\
+    \hline
+    \endhead
+
+    \hline
+    \endfoot
+
+    \hline
+    \endlastfoot
+
+    Correlación intra-clúster promedio & 0.7399 & 0.7431 & 0.7515 & 0.7533 \\
+    \hline
+    Davies-Bouldin Index & 1.1791 & 1.3374 & 1.2177 & 1.1536 \\
+    \hline
+    Calinski-Harabasz Index & 283.50 & 255.81 & 253.33 & 270.12 \\
+    \hline
+    Silhouette Score & 0.2624 & 0.2214 & 0.2326 & 0.2590 \\
+    \hline
+
+    \end{longtable}
+
+    Las características intrínsecas de las curvas de carga estudiadas en esta investigación explican los valores bajos que se han obtenido para el Silhouette Score, ya que estas presentan una variabilidad elevada y densidades heterogéneas entre clústeres. Según \cite{jain2021validating}, este comportamiento es habitual en conjuntos de datos reales sobre demanda eléctrica, en los que dicho índice pierde sensibilidad frente a agrupaciones densas y patrones con una dispersión interna alta. En este escenario, los hallazgos conseguidos enfatizan la importancia de analizar el Silhouette Score de manera complementaria y dar prioridad a las métricas que se enfocan en la semejanza estructural de las curvas, como la correlación intra-clúster.
+
+
+\end{itemize}
+
+\subsection{Evaluación}
+\subsubsection*{Evaluar resultados}
+\subsubsection*{Revisar el proceso}
+\subsubsection*{Determinar siguientes pasos}
+\subsection{Despliegue}
+\subsubsection*{Planificar el despliegue}
+\subsubsection*{Planificar monitoreo y mantenimiento}
+\subsubsection*{Producir el reporte final}
+\subsubsection*{Revisar el proyecto}
+
 
 \item \textbf{Proceso de agrupación}\\
 El segundo proceso comprende todo el proceso de agrupamiento, en este apartado se elegirá el número de agrupaciones deseadas, se seleccionarán y aplicarán diversos algoritmos de agrupamiento para finalmente evaluar la calidad de las agrupaciones obtenidas por cada algoritmo. La \autoref{fig:fig2} ilustra de manera detallada todas las etapas que abarca este proceso.\\

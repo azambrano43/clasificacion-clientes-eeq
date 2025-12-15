@@ -6,6 +6,7 @@ from pymongo.server_api import ServerApi
 from pymongo import MongoClient
 from datetime import datetime
 from dotenv import load_dotenv
+import re
 import os
 
 
@@ -151,7 +152,7 @@ def graficar_curva_tipo(df, cod_cli, path):
 def obtener_coords_curva_tipo(df):
 
     # Agrupar por hora y aplicar mediana
-    df_grouped = df.groupby("Hora")["Potencia_aparente_escalada"].apply(np.mean).sort_index(ascending=True).reset_index(drop=False)
+    df_grouped = df.groupby("Hora")["Potencia_aparente_escalada"].apply(np.median).sort_index(ascending=True).reset_index(drop=False)
 
     # Retornar el array con los 96 valores de demanda
     return df_grouped
@@ -161,10 +162,10 @@ def obtener_coords_curva_tipo(df):
 def obtener_coords_dia_demanda_max(df):
 
     # Obtener el máximo valor de potencia aparente
-    max_potencia = df['Potencia_aparente_escalada'].max()
+    max_potencia = df['Potencia_aparente'].max()
 
     # Encontrar la fecha correspondiente a la máxima potencia aparente
-    fecha_max_potencia = df[df['Potencia_aparente_escalada'] == max_potencia]['Fecha'].iloc[0]
+    fecha_max_potencia = df[df['Potencia_aparente'] == max_potencia]['Fecha'].iloc[0]
 
     # Filtrar los registros correspondientes a esa fecha
     df_max_fecha = df[df['Fecha'] == fecha_max_potencia]
@@ -186,6 +187,12 @@ def fecha_formato_unico(fecha_str):
     elif len(fecha_str.split('/')[0]) != 4: # Cuando el formato es día/mes/año
         seps = fecha_str.split('/')
         return f"{seps[-1]}/{seps[1]}/{seps[0]}"
+    
+def hora_formato_unico(hora_str):
+    if pd.isna(hora_str):
+        return np.nan
+    match = re.match(r'^(\d{1,2}:\d{2})(:\d{2})?$', hora_str.strip())
+    return match.group(1) if match else np.nan
 
 # | ===========================================================================|
 
@@ -205,7 +212,7 @@ def intentar_abrir_archivo_datos(path_archivo):
                                             #na_values="N/D",
                                             encoding="utf-16",
                                             #on_bad_lines="skip",
-                                            encoding_errors="ignore" 
+                                            encoding_errors="ignore"
                                             ) 
     except:
         pass
@@ -244,13 +251,13 @@ def intentar_abrir_archivo_datos(path_archivo):
 
 
 
-    if len(df_archivo_telem_tab.columns) > 1:
-        df_archivo_telem = df_archivo_telem_tab.copy()
-    elif len(df_archivo_telem_pc.columns) > 1:
-        df_archivo_telem = df_archivo_telem_pc.copy()
-    else:
-        df_archivo_telem = df_archivo_telem_c.copy()
+    dfs = [df_archivo_telem_tab, df_archivo_telem_pc, df_archivo_telem_c]
+    
+    # Elegir el primer DF válido (más de 1 columna) o el último como fallback
+    for df in dfs:
+        if df.shape[1] > 1:
+            return df
 
-    return df_archivo_telem
+    return dfs[-1]
 
 # | ===========================================================================|
