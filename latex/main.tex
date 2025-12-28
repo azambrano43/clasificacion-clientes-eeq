@@ -1092,7 +1092,9 @@ Con la finalidad de medir la calidad de los agrupamientos logrados y cotejar el 
 
     \end{longtable}
 
-    Las características intrínsecas de las curvas de carga estudiadas en esta investigación explican los valores bajos que se han obtenido para el Silhouette Score, ya que estas presentan una variabilidad elevada y densidades heterogéneas entre clústeres. Según \cite{jain2021validating}, este comportamiento es habitual en conjuntos de datos reales sobre demanda eléctrica, en los que dicho índice pierde sensibilidad frente a agrupaciones densas y patrones con una dispersión interna alta. En este escenario, los hallazgos conseguidos enfatizan la importancia de analizar el Silhouette Score de manera complementaria y dar prioridad a las métricas que se enfocan en la semejanza estructural de las curvas, como la correlación intra-clúster.
+    Las características intrínsecas de las curvas de carga estudiadas en esta investigación explican los valores bajos que se han obtenido para el Silhouette Score, ya que estas presentan una variabilidad elevada y densidades heterogéneas entre clústeres. Según \cite{jain2021validating}, este comportamiento es habitual en conjuntos de datos reales sobre demanda eléctrica, en los que dicho índice pierde sensibilidad frente a agrupaciones densas y patrones con una dispersión interna alta. En este escenario, los hallazgos conseguidos enfatizan la importancia de analizar el Silhouette Score de manera complementaria y dar prioridad a las métricas que se enfocan en la semejanza estructural de las curvas, como la correlación intra-clúster.\\
+
+    De acuerdo a los resultados obtenidos se puede observar que el algoritmo Spectral Clustering alcanza el mayor valor de correlación intra-clúster medio, que como se definió anteriormente es la principal métrica a evaluar, ya que está directamente relacionada con el criterio de similitud de la forma de la curva de carga. Por otra parte, su puntuación en las métricas complementarias, es muy comparable al resto de los algoritmos analizados y no presenta diferencias que desaconseje su uso. Por lo tanto se escoge el algoritmo Spectral Clustering como el más adecuado para el análisis detallado y la interpretación de los patrones de consumo energético que se han llegado a identificar, siendo esta una decisión que servirá de base para la fase de la Evaluación del presente trabajo.\\
 
 
 \end{itemize}
@@ -1101,7 +1103,7 @@ Con la finalidad de medir la calidad de los agrupamientos logrados y cotejar el 
 
 La fase de Evaluación dentro del ciclo que propone la metodología CRISP-DM tiene como propósito el de validar en integral los resultados obtenidos en la fase de modelado, verificando que los agrupamientos alcanzados validan los objetivos previamente definidos y proporcionan información útil de cara al análisis del consumo energético de la clientela no regulada.\\
 
-Esta fase tiene una especial importancia en el contexto de este trabajo, dado que aquí lo que se procura no es únicamente obtener agrupaciones matemáticamente válidas, sino ser capaz de llegar a identificar distintos, homogéneos e interpretables patrones de comportamiento energético que pudieran servir de sustrato para poder plantear procesos de planificación energética, de análisis técnico e incluso de toma de decisiones en empresas distribuidoras de energía.\\
+Esta fase tiene una especial importancia en el contexto de este trabajo, dado que aquí lo que se procura no es únicamente obtener agrupaciones matemáticamente válidas, sino ser capaz de llegar a identificar distintos, homogéneos e interpretables patrones de comportamiento energético que pudieran servir de sustrato para poder plantear procesos de planificación energética, de análisis técnico e incluso de toma de decisiones en empresas distribuidoras de energía.
 
 \subsubsection*{Evaluar resultados}
 La evaluación de los resultados es la tarea clave de esta fase y del proyecto en su conjunto, ya que permite establecer en qué medida los modelos de clustering construidos permiten conseguir el objetivo principal del análisis; el cual no es otro que segmentar los clientes no regulados en función de la forma de su curva característica anual de consumo energético.\\
@@ -1114,49 +1116,73 @@ En contraste con los problemas de aprendizaje supervisado, donde son las etiquet
 \end{itemize}
 
 
-De acuerdo a los tres ejes anteriormente definidos, el análisis de resultados es planteado a partir de una evaluación global de patrones que han sido identificados, abordando aspectos como diferenciabilidad y coherencia interna de los clústeres obtenidos. En este sentido, el análisis se realiza a través de los aspectos siguientes:
+De acuerdo a los tres ejes anteriormente definidos, el análisis de resultados es planteado a partir de una evaluación global de patrones que han sido identificados, abordando aspectos como diferenciabilidad y coherencia interna de los clústeres obtenidos.\\
+
+\textbf{Diferenciabilidad: Curvas obtenidas por clúster\\}
+
+Los resultados de agrupación obtenidos a partir de la ejecución de los algoritmos K-Means, Gaussian Mixture, Birch y Spectral Clustering, dieron lugar a agrupaciones que mantenían consistencia en todos los casos, obteniendo curvas tipo perfectamente diferenciables por cada clúster.\\
+
+Este aspecto es relevante, ya que significa que los algoritmos han sido capaces de captar similitudes reales entre las curvas de carga de los clientes, no simplemente diferencias por consumo absoluto. Este comportamiento guarda relación directa con las decisiones tomadas en las fases de preparación y modelado de los datos, donde se normalizaron y alinearon las curvas de modo que se eliminaran sesgos por escalas y desplazamientos verticales.\\ 
+    
+Al contemplar simultáneamente las curvas tipo promedio que han generado las diferentes técnicas, se puede observar que, con independencia de la técnica empleada, los patrones de consumo identifican bien y este comportamiento se manifiesta en perfiles que pueden mostrar un comportamiento horaria estable durante el día, perfiles que muestran un comportamiento con picos muy bien definidos en un intervalo horario específico y perfiles con alta variabilidad a lo largo del día.\\
+
+La Figura \ref{fig:curvas_tipo_algoritmos_2x2} muestra de manera visual una comparación entre las curvas tipo promedio generadas para cada clúster, según el algoritmo que se ha utilizado respectivamente para su obtención:
+
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[scale=0.44]{./imgs/curvas_tipo_algoritmos_todos.png}
+    \caption{{Curvas tipo representativas obtenidas para cada clúster de cada algoritmo de clustering.}}
+    \label{fig:curvas_tipo_algoritmos_2x2}
+    \end{center}
+\end{figure}
+
+Es cierto que existen pequeñas variaciones en las formas exactas de las curvas obtenidas por las diferentes técnicas, pero que todas ellas acaban coincidiendo en identificar un comportamiento energéticos diferenciables refuerza la idea de que el abordaje es robusto y que, en consecuencia, es correcta la elección de evaluar diferentes técnicas de clustering de manera comparativa.\\
+
+\textbf{Evaluación de homogeneidad y separación mediante PCA\\}
+
+Con la finalidad de enriquecer el análisis de los clústeres desde una perspectiva geométrica y visual, se llevó a cabo una transformación de la dimensionalidad usando un Análisis de Componentes Principales (PCA) y proyectando las curvas características de los clientes en un espacio bidimensional.\\
+
+La representación de esta forma permite estudiar simultáneamente la separación entre los clústeres y la concentración de los clientes dentro del clúster, constituyendo una genuina evaluación de la estructura de los clústeres obtenidos.\\
+
+Los resultados indican que, en los cuatro algoritmos implicados en el proceso, los clústeres muestran una distribución en la representación espacial muy bien definida, donde se observa una separación clara entre los grupos y una buena compactación de los puntos dentro de cada clúster. La estructura de los clústeres puede observarse de manera gráfica en la Figura \ref{fig:PCA_analisis}.
+
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[scale=0.48]{./imgs/PCA_clusters.png}
+    \caption{{Proyección PCA bidimensional de las agrupaciones generadas por algoritmo.}}
+    \label{fig:PCA_analisis}
+    \end{center}
+\end{figure}
+
+Esta estructura confirma que los clientes que han quedado agrupados muestran similitudes en la forma de sus curvas de carga, y que los grupos resultantes no presentan solapamientos evidentes. Este comportamiento pone en evidencia la pertinencia de la correlación intra-clúster promedio como métrica de evaluación principal, puesto que se trata de una métrica que permite codificar de una forma más directa la semejanza entre cada curva en concreto y la curva tipo representativa de su clúster, cumpliendo exactamente con la intención del análisis.\\
+
+
+A partir de los resultados de la tarea de evaluación de los modelos, ejecutada en la Fase 4 (Modelado) del presente trabajo, en la cual se evaluó de manera cuantitativa la calidad de las agrupaciones generadas por los distintos algoritmos de clustering utilizando métricas internas de validación, a continuación se procede a la interpretación de los resultados de agrupamiento. Más concretamente, el análisis se enfoca en los clústeres obtenidos a partir de la aplicación del algoritmo Spectral Clustering, previamente seleccionado como el modelo que presenta el mejor desempeño.\\
+
+\textbf{Análisis detallado de los clústeres obtenidos mediante Spectral Clustering\\}
+    
+A partir de la selección del algoritmo Spectral Clustering, se procedió a analizar en detalle las curvas tipo correspondientes a cada clúster generado por Spectral Clustering, considerando no únicamente las curvas promedio, sino todas las curvas individuales de los clientes que conforman cada grupo. Este análisis permite evaluar la consistencia interna de los clústeres y extraer conclusiones sobre los comportamientos energéticos característicos de cada segmento.\\
+
+En la Figura \ref{fig:curvas_clientes_SC} se presentan, para cada clúster obtenido mediante la aplicación del algoritmo Spectral Clustering, las curvas tipo de todos los clientes que conforman cada clúster respectivamente.
+
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[scale=0.44]{./imgs/curvas_agrupadas_mejor_algoritmo.png}
+    \caption{{Spectral Clustering: curvas de carga de los clientes agrupados por clúster.}}
+    \label{fig:curvas_clientes_SC}
+    \end{center}
+\end{figure}
+
+Al observar las curvas de carga por clúster de manera conjunta, es posible percibir la coherencia interna de los grupos obtenidos y distinguir entre diferentes patrones de consumo. Siguiendo esta observación, a continuación se muestra la interpretación energética de cada clúster que ha sido identificado a través de Spectral Clustering.\\
 
 \begin{itemize}
-    \item Diferenciabilidad de curvas en base a su agrupación por clúster y algoritmo\\
-    Los resultados de la agrupación obtenidos a partir de la ejecución de los algoritmos K-Medoids, Gaussian Mixture Models, Birch y Spectal Clustering, dieron lugar a agrupaciones que mantenían consistencia en todos los casos, obteniendo curvas tipo promedios perfectamente diferenciables por cada clúster.\\
-
-    Este aspecto es relevante, ya que significa que los algoritmos han sido capaces de captar similitudes reales entre las curvas de carga de los clientes, no simplemente diferencias por consumo absoluto. Este comportamiento guarda relación directa con las decisiones tomadas en las fases de preparación y modelado de los datos, donde se normalizaron y alinearon las curvas de modo que se eliminaran sesgos por escalas y desplazamientos verticales.\\ 
-    
-    Al contemplar simultáneamente las curvas tipo promedio que han generado las diferentes técnicas, se puede observar que, con independencia de la técnica empleada, los patrones de consumo identifican bien y este comportamiento se manifiesta en perfiles que pueden mostrar un comportamiento horaria estable durante el día, perfiles que muestran un comportamiento con picos muy bien definidos en un intervalo horario específico y perfiles con alta variabilidad a lo largo del día.\\
-
-    Es cierto que existen pequeñas variaciones en las formas exactas de las curvas obtenidas por las diferentes técnicas, pero que todas ellas acaban coincidiendo en identificar un comportamiento energéticos diferenciables refuerza la idea de que el abordaje es robusto y que, en consecuencia, es correcta la elección de evaluar diferentes técnicas de clustering de manera comparativa.\\
-
-    \item Evaluación de homogeneidad y separación mediante PCA\\
-    Con la finalidad de enriquecer el análisis de los clústeres desde una perspectiva geométrica y visual, se llevó a cabo una transformación de la dimensionalidad usando un Análisis de Componentes Principales y proyectando las curves de las características de los clientes en un espacio bidimensional.\\
-
-    La representación de esta forma permite estudiar simultáneamente la separación entre los clústeres y la concentración de los clientes dentro del clúster, constituyendo una genuina evaluación de la estructura de los clústeres obtenidos.\\
-
-    Los resultados indican que, en los cuatro algoritmos implicados en el proceso, los clústeres muestran una distribución en la representación espacial muy bien definida, donde se observa una separación clara entre los grupos y una buena compactación de los puntos dentro de cada clúster. \\
-    
-    Esta estructura confirma que los clientes que han quedado agrupados muestran similitudes en la forma de sus curvas de carga, y que los grupos resultantes no presentan solapamientos evidentes. Este comportamiento pone en evidencia la pertinencia de la correlación intra-clúster promedio como métrica de evaluación principal, puesto que se trata de una métrica que permite codificar de una forma más directa la semejanza entre cada curva en concreto y la curva tipo representativa de su clúster, cumpliendo exactamente con la intención del análisis.\\
-
+    \item Clúster 0: Este clúster agrupa aquellos clientes cuyo perfil de consumo muestra niveles altos durante la madrugada, la forma que presentan estas curvas nos indican patrones de funcionamiento que no corresponden a horarios laborables, lo cual indica que estos clientes realizan sus actividades en horarios nocturnos.
+    \item Clúster 1: Los clientes agrupados en el presente clúster presentan un comportamiento estable a lo largo del día, sin variaciones claramente definidas. La forma de la curva refleja una dispersión ordinaria, lo cual indica que estos clientes mantienen su actividad sin una estructura horaria dominante.
+    \item Clúster 2: Este clúster contiene aquellos clientes cuya forma de curva denota actividad diurna, caracterizada por un incremento sostenido del consumo en horas de la mañana, alcanzando valores elevados durante el día y disminuyendo de manera gradual y progresiva hacia la tarde y noche. Se espera que estos clientes mantengan patrones de consumo concentrados en el período diurno, sin transiciones abruptas entre estados de baja y alta demanda.
+    \item Clúster 3: Los clientes pertenecientes a este clúster presentan una forma de curva escalonada, con consumos considerablemente bajos durante la madrugada y un ascenso abrupto en horas de la mañana, una meseta estable durante el día y un descenso igualmente abrupto al finalizar la jornada. Se espera que estos clientes presenten patrones de consumo estructurados y delimitados en intervalos de tiempo claramente definidos.
 \end{itemize}
 
-A partir de los resultados de la tarea de evaluación de los modelos, ejecutada en la Fase 4 (Modelado) del presente trabajo, en la cual se evaluó de manera cuantitativa la calidad de las agrupaciones generadas por los distintos algoritmos de clustering utilizando métricas internas de validación, a continuación se procede a la interpretación de los resultados de agrupamiento. Más concretamente, el análisis se enfoca en los clústeres obtenidos a partir de la aplicación del algoritmo Spectral Clustering, previamente seleccionado como el modelo que presenta el mejor desempeño.
-
-\begin{itemize}
-
-    \item Análisis detallado de los clústeres obtenidos mediante Spectral Clustering\\
-    
-    A partir de la selección del algoritmo Spectral Clustering, se procedió a analizar en detalle las curvas tipo correspondientes a cada clúster generado por Spectral Clustering, considerando no únicamente las curvas promedio, sino todas las curvas individuales de los clientes que conforman cada grupo. Este análisis permite evaluar la consistencia interna de los clústeres y extraer conclusiones sobre los comportamientos energéticos característicos de cada segmento.\\
-    
-    Clúster 1: Agrupa clientes con un perfil de consumo estable a lo largo del día, con variaciones suaves y sin picos pronunciados. Este comportamiento es característico de cargas con operación continua o procesos industriales que mantienen una demanda relativamente constante durante la jornada.\\
-
-    Clúster 2: Corresponde a clientes que presentan incrementos significativos de consumo en franjas horarias específicas, principalmente asociadas a horarios laborales, lo que sugiere procesos productivos concentrados en determinados intervalos del día.\\
-
-    Clúster 3: Incluye perfiles con alta variabilidad intradiaria, evidenciando picos y valles pronunciados en su curva de carga. Este patrón puede asociarse a procesos intermitentes, ciclos de producción no uniformes o a una combinación de diferentes tipos de carga dentro del mismo cliente.\\
-
-    Clúster 4: Agrupa clientes con consumos reducidos durante gran parte del día y aumentos puntuales de demanda, lo que podría relacionarse con operaciones bajo demanda, cargas específicas de corta duración o actividades con baja continuidad temporal.\\
-
-    La clara diferenciación entre estos comportamientos confirma que los clústeres obtenidos no solo son estadísticamente consistentes, sino que además presentan una interpretación energética clara y útil, lo cual es fundamental para su aplicación en escenarios reales del sector eléctrico.
-
-
-\end{itemize}
+La clara diferenciación entre estos comportamientos confirma que los clústeres obtenidos no solo son estadísticamente consistentes, sino que además presentan una interpretación energética clara y útil, lo cual es fundamental para su aplicación en escenarios reales del sector eléctrico.
 
 \subsubsection*{Revisar el proceso}
 En esta tarea se realizó una revisión integral del proceso seguido a lo largo del proyecto de minería de datos, abarcando desde la comprensión del negocio hasta la evaluación de los modelos de clustering.\\
