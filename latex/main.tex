@@ -1052,15 +1052,81 @@ El modelo se construye mediante la implementación práctica de las técnicas de
     Se implementaron los algoritmos Birch, K-Means, Gaussian Mixture Model y Spectral Clustering en el conjunto de curvas de carga ajustadas una vez establecidos los hiperparámetros. En consecuencia, cada algoritmo le otorgó a cada cliente una etiqueta de clúster, lo que produjo cuatro grupos por técnica.
 \end{enumerate}
 \subsubsection*{Evaluar el modelo}
-Con la finalidad de medir la calidad de los agrupamientos logrados y cotejar el rendimiento de los diferentes algoritmos, se llevó a cabo la evaluación de los modelos de clustering a través de métricas internas de validación.
+En esta tarea se realizó la evaluación de los modelos de clustering implementados, con el fin de analizar la calidad de los agrupamientos obtenidos a partir de las curvas de carga características, mediante métricas internas de validación basadas en la coherencia interna de los clústeres y en su separación.\\
 
-\begin{itemize}
-    \item Correlación intra-clúster\\
-    Se empleó la correlación intra-clúster como la métrica principal de evaluación, que se define como el promedio de la correlación entre cada curva de carga individual y la correspondiente curva media del clúster. Esta métrica posibilita la evaluación directa de la semejanza en la forma de las curvas agrupadas, lo que resulta particularmente apropiado para series temporales normalizadas.\\ \\
-    La correlación es una medida sólida para analizar la coherencia interna de los clústeres a partir de perfiles de carga eléctrica, porque se enfoca en las similitudes estructurales de las curvas y no en su magnitud absoluta \cite{labeeuw2013residential,Chicco2012OverviewClustering}.
-    \item Métricas complementarias de validación\\
-    En un enfoque complementario, se usaron el índice de Calinski-Harabasz (CHI), el de Davies-Bouldin (DBI) y el Silhouette Score, tres métricas que se usan con frecuencia para medir la separación entre los clústeres y su compacidad interna \cite{Chicco2012OverviewClustering,li2023shapebased}.\\ \\
-    La Tabla \ref{tab:metricas_clustering} muestra una comparación numérica del rendimiento de cada algoritmo de agrupamiento, teniendo en cuenta las métricas complementarias y la correlación dentro del clúster.
+Los resultados cuantitativos y el análisis comparativo de los algoritmos evaluados son presentados en la sección \ref{sec:resultados} ``Resultados''  del presente documento, en la cual se encuentran agregados y analizados los valores correspondientes a cada métrica aplicada.
+
+\subsection{Evaluación}
+
+La fase de Evaluación dentro del ciclo que propone la metodología CRISP-DM tiene como propósito el de validar en integral los resultados obtenidos en la fase de modelado, verificando que los agrupamientos alcanzados validan los objetivos previamente definidos y proporcionan información útil de cara al análisis del consumo energético de la clientela no regulada.\\
+
+Esta fase tiene una especial importancia en el contexto de este trabajo, dado que aquí lo que se procura no es únicamente obtener agrupaciones matemáticamente válidas, sino ser capaz de llegar a identificar distintos, homogéneos e interpretables patrones de comportamiento energético que pudieran servir de sustrato para poder plantear procesos de planificación energética, de análisis técnico e incluso de toma de decisiones en empresas distribuidoras de energía.
+
+\subsubsection*{Evaluar resultados}
+La tarea de evaluación de resultados tiene como finalidad determinar en qué medida los modelos de clustering desarrollados cumplen con el objetivo del componente, orientado a la identificación de patrones de consumo energético en los clientes no regulados.\\
+
+La valoración de los resultados que se obtienen con la interpretación cuantitativa y cualitativa de las agrupaciones generadas se presentan en la sección \ref{sec:resultados} ``Resultados'', donde se analizan las distintas métricas de validación, las visualizaciones de los clusters y la interpretación energética de los patrones encontrados.
+
+
+\subsubsection*{Revisar el proceso}
+En esta tarea se realizó una revisión integral del proceso seguido a lo largo del proyecto de minería de datos, abarcando desde la comprensión del negocio hasta la evaluación de los modelos de clustering.\\
+
+Se verificó que las fases de preparación de los datos, modelado y evaluación se ejecutaron de manera coherente con los objetivos planteados, y que las decisiones adoptadas en cada etapa se encuentran debidamente justificadas. En particular, se constató que la selección de las curvas tipo como representación del consumo anual, el uso de técnicas de normalización y alineación, y la elección de métricas de evaluación orientadas a la forma de las curvas fueron adecuadas para el problema abordado.\\
+
+Asimismo, se confirmó que el proceso ETL implementado garantiza la reproducibilidad del análisis y que los resultados obtenidos pueden ser replicados o actualizados conforme se disponga de nueva información de consumo. No se identificaron tareas críticas omitidas ni inconsistencias en el flujo metodológico seguido.
+
+\subsubsection*{Determinar siguientes pasos}
+Con base en la evaluación de los resultados y en la revisión del proceso, se determina que el proyecto ha cumplido satisfactoriamente los objetivos definidos para la segmentación de clientes no regulados del sector eléctrico.\\
+
+Dado que el alcance de la presente tesis se centra en el análisis y evaluación de los modelos de clustering, las actividades asociadas a la fase de despliegue operativo no se desarrollan en este trabajo. Por tanto, la implementación del modelo seleccionado en sistemas productivos o plataformas de gestión energética no aplica dentro del alcance actual.\\
+
+No obstante, se identifican como líneas futuras de trabajo la integración del modelo de clustering en herramientas de planificación energética, la actualización periódica de las agrupaciones con nuevos datos de consumo y la incorporación de variables adicionales que permitan enriquecer la caracterización de los clientes.
+
+
+\subsection{Despliegue}
+La fase de planificación del despliegue de la metodología CRISP-DM tiene como objetivo garantizar que los resultados obtenidos durante el proceso de minería de datos sean efectivamente documentados, entendidos y puedan ser utilizados de una forma práctica. En proyectos orientados a entornos productivos, esta fase abarca la implementación efectiva de los modelos desarrollados. No obstante, en este trabajo el despliegue se plantea de una forma analítica y metodológica, ya que se ha determinado que el alcance de la presente tesis no engloba la implementación operativa. 
+\subsubsection*{Planificar el despliegue}
+El plan de despliegue (plan determinado en la fase de evaluación) no se identifica como una tarea para el presente proyecto de gestión, ya que el alcance de la tesis excluye la ejecución ofrendada o la integración automática del modelo de agrupamiento por el resto de los sistemas productivos de la empresa distribuidora de energía eléctrica, sólo el análisis, evaluación y validación de las técnicas de segmentación de clientes en un entorno controlado.
+\subsubsection*{Planificar monitoreo y mantenimiento}
+Esta tarea no corresponde a este proyecto, ya que los modelos generados no son disponibilizados en un ambiente de producción, ni se soporta un proceso de trabajo que requiera el monitoreo en tiempo real o un mantenimiento transcurrido un periodo de tiempo.
+\subsubsection*{Producir el reporte final}
+La elaboración del informe final ha de ser el principal mecanismo de despliegue de los resultados obtenidos en este trabajo, ya que el informe debe ir integrando de forma estructurada y coherente todo este proceso que se contiene dentro de la metodología CRISP-DM, permitiendo que el trabajo realizado pueda quedar documentado de manera clara, tanto en lo que respecta a los aspectos metodológicos como a los resultados técnicos alcanzados.\\
+
+El informe debe integrar la descripción del proceso ETL que se diseña para la construcción de curvas de carga representativas anuales y que es objeto de decisiones que se han de tomar para limpiar, normalizar e interpolar los datos de consumo energético. De igual forma, se documenta con detalle el proceso de selección, el de implementación y el de hiperparametrización de los algoritmos de aprendizaje no supervisado elegidos, detallando las pautas técnicas y las condiciones del criterio para poder definir el número óptimo de agrupaciones y la optimización de los parámetros de cada uno de los modelos concretos.\\
+
+El propio informe presenta de forma sistemática los resultados obtenidos por cada uno de los algoritmos de clustering, logrando incluir métricas cuantitativas de evaluación y presentaciones gráficas de las curvas promedio y de las curvas individuales de las agrupadas, las cuales permiten una clara interpretación de los patrones de consumo energético y la comparación entre las distintas técnicas evaluadas.\\
+
+Así, el informe final tiene no solo la función de documentar lo que se ha hecho sino también un insumo técnico que puede ser utilizado por la empresa distribuidora de energía para futuros análisis relacionados con la planificación, la segmentación de clientes o estudios de comportamiento de la demanda.
+\subsubsection*{Revisar el proyecto}
+La revisión del proyecto nos permite reflexionar sobre el proceso de desarrollo del componente de análisis y segmentación, así como realizar una identificación de algunos elementos técnicos y metodológicos que podrían servir de referencia para trabajos posteriores.\\
+
+Uno de los aprendizajes del proyecto es la importancia de disponer de un proceso ETL sólido y bien diseñado, lo cual cobra especial relevancia cuando se trabaja con datos de consumo energético reales que se caracterizan por tener irregularidades de formato, valores ausentes y comportamientos atípicos que tienen que ver con clientes no regulados. La preparación de las curvas de carga fue un punto clave para poder garantizar la calidad y robustez de los agrupamientos obtenidos.\\
+
+Se hizo evidente la importancia de escoger métricas de evaluación que fueran acorde a la naturaleza del problema. En particular, el uso de métricas de evaluación basadas en la similaridad de la forma de las curvas permitió evaluar de una manera más apropiada la homogeneidad de los clústeres, en comparación con métricas clasicas que no siempre permiten capturar de forma correcta el comportamiento de series de tiempo normalizadas.\\
+
+Finalmente, el proyecto sirvió para demostrar que la combinación de análisis cuantitativo con herramientas de visualización facilita en gran medida la interpretación de los resultados y la comunicación a actores no expertos en minería de datos de los patrones que han sido identificados, aspecto fundamental dentro del sector eléctrico.
+
+% RESULTADOS, CONCLUSIONES Y RECOMENDACIONES
+
+
+\chapter{Resultados, Conclusiones y Recomendaciones}
+\section{Resultados}\label{sec:resultados}
+En este apartado se presentan y analizan los resultados obtenidos, como resultado de la aplicación y evaluación de los algoritmos de clustering a las curvas de carga características anuales de los clientes no regulados. Por tanto, los resultados consolidados son consecuencia de los algoritmos aplicados en los procesos descritos en las fases de Modelado y de Evaluación de la metodología CRISP-DM y permiten la comparación del rendimiento alcanzado por los algoritmos que se han implementado, la medida de la calidad de agrupamientos generados y la ponderación del modelo o método de clustering más adecuado para la identificación de patrones de consumo energético.
+\subsection{Evaluación cuantitativa de los algoritmos de clustering}\label{subsec:evaluacion_algoritmos}
+Para la obtención de la calidad de los agrupamientos alcanzados y para poder llevar a cabo la comparación del rendimiento acerca de los diferentes algoritmos de clustering que se someten a estudio, se procedió a una evaluación de la que se obtuvieron métricas internamente mediante el uso de métricas de validación. Éstas se pueden usar para calcular tanto la coherencia interna de los clústeres como la separación externa de los mismos sin necesidad de emplear ningún tipo de información etiquetada, siendo idóneas para resolver problemas de aprendizaje no supervisado como el que se estudia en este trabajo.
+
+\subsubsection*{Correlación intra-clúster promedio}
+
+La correlación intra-cluster ha sido la métrica principal usada. Se trata del valor medio de la correlación entre cada curva de carga individual y su curva media de cada clúster. Esta métrica permite calcular directamente la semejanza en la forma de las curvas agrupadas, lo que era fundamental en este trabajo, dado que el objetivo era agrupar a los usuarios en función del comportamiento energético que se refleja en la forma de su curva de carga característica anual.\\
+
+La correlación intra-clúster es una medida muy eficaz para el estudio de perfiles de carga eléctrica en el sentido de que está centrada en la semejanza estructural de las curvas y no en el valor absoluto de sus magnitudes, permitiendo que la comparación de los patrones de consumo se lleve a cabo sin necesidad de considerar la demanda que presenta cada uno de los clientes \cite{labeeuw2013residential,Chicco2012OverviewClustering}. Este planteamiento resulta especialmente oportuno en el caso de las curvas normalizadas, donde el objetivo principal se centra en la forma del perfil y no en la escala de la misma.\\
+
+Los valores de los correlación intra-clúster medias de los algoritmos empleados evidencian, a su vez, las variaciones existentes en el grado de homogeneidad de los grupos generados, constituyendo, por tanto, un criterio directo de calidad de agrupamientos obtenidos.
+
+\subsubsection*{Métricas internas complementarias de validación}
+En un proceder complementario a la correlación intra-clúster media se hicieron uso de métricas internas de validación muy utilizadas en la literatura con el propósito de estudiar y evaluar la calidad de los agrupamientos obtenidos. En concreto, el análisis de Calinski-Harabasz (CHI), el índice de Davies-Bouldin (DBI) y el Silhouette Score, este último un indicador que permite medir, como hemos apuntado, la separación entre clústeres y su compacidad interna \cite{Chicco2012OverviewClustering,li2023shapebased}.\\
+
+En la Tabla \ref{tab:metricas_clustering} se muestra la comparación numérica del rendimiento de los algoritmos de clustering debatidos y analizados de manera independiente de los valores que determinan la métrica de evaluación complementaria en comparación con la correlación intra-clúster media, como se ha definido con anterioridad la métrica sobre la que hemos convencido, como métrica principal del análisis.
 
     \begin{longtable}{|l|c|c|c|c|}
     \caption{Resultados de las métricas de evaluación para los algoritmos de clustering}
@@ -1092,21 +1158,14 @@ Con la finalidad de medir la calidad de los agrupamientos logrados y cotejar el 
 
     \end{longtable}
 
-    Las características intrínsecas de las curvas de carga estudiadas en esta investigación explican los valores bajos que se han obtenido para el Silhouette Score, ya que estas presentan una variabilidad elevada y densidades heterogéneas entre clústeres. Según \cite{jain2021validating}, este comportamiento es habitual en conjuntos de datos reales sobre demanda eléctrica, en los que dicho índice pierde sensibilidad frente a agrupaciones densas y patrones con una dispersión interna alta. En este escenario, los hallazgos conseguidos enfatizan la importancia de analizar el Silhouette Score de manera complementaria y dar prioridad a las métricas que se enfocan en la semejanza estructural de las curvas, como la correlación intra-clúster.\\
+El análisis de resultados evidencia que los valores obtenidos para el Silhouette Score son relativamente bajos para todos los algoritmos analizados. Este comportamiento se entiende perfectamente en las características naturales de las curvas de carga supuestas, que en el caso propuesto tienen una variabilidad temporal elevada y, además, densidades tales que nos evidencian que las mismas son heterogéneas. De acuerdo a lo manifestado en el trabajo realizado por \cite{jain2021validating}, este fenómeno se da frecuentemente en conjuntos de datos reales de demanda eléctrica, en virtud de que dicho índice va perdiendo robustez respecto de agrupaciones densas y patrones con gran dispersión interna. \\
 
-    De acuerdo a los resultados obtenidos se puede observar que el algoritmo Spectral Clustering alcanza el mayor valor de correlación intra-clúster medio, que como se definió anteriormente es la principal métrica a evaluar, ya que está directamente relacionada con el criterio de similitud de la forma de la curva de carga. Por otra parte, su puntuación en las métricas complementarias, es muy comparable al resto de los algoritmos analizados y no presenta diferencias que desaconseje su uso. Por lo tanto se escoge el algoritmo Spectral Clustering como el más adecuado para el análisis detallado y la interpretación de los patrones de consumo energético que se han llegado a identificar, siendo esta una decisión que servirá de base para la fase de la Evaluación del presente trabajo.\\
+En este sentido, los resultados obtenidos apuntan a la interpretación del Silhouette Score como un argumento más y no como un criterio que pueda determinar y optarse por él de forma aislada, dejando en un segundo plano métricas relacionadas directamente con la semejanza estructural de las curvas de carga. Desde este punto de vista, la correlación intra-cluster es mucho más representativa de lo que se pretende con la presente investigación, que es evaluar de forma explícita la similitud en la forma de los perfiles de consumo energético.\\
 
+Según los resultados obtenidos, se puede deducir que el algoritmo Spectral Clustering es quien consigue el mayor valor de correlación intra-cluster promedio entre los métodos de clustering analizados. Al ser una métrica que se encuentra en relación directa con el criterio de similitud de la forma de la curva de carga, se considera el principal indicativo de la calidad del agrupamiento. Igualmente, su comportamiento en las métricas complementarias se asemeja al del resto de los algoritmos testeados, sin evidenciar diferencias que desaconsejen su uso.
 
-\end{itemize}
-
-\subsection{Evaluación}
-
-La fase de Evaluación dentro del ciclo que propone la metodología CRISP-DM tiene como propósito el de validar en integral los resultados obtenidos en la fase de modelado, verificando que los agrupamientos alcanzados validan los objetivos previamente definidos y proporcionan información útil de cara al análisis del consumo energético de la clientela no regulada.\\
-
-Esta fase tiene una especial importancia en el contexto de este trabajo, dado que aquí lo que se procura no es únicamente obtener agrupaciones matemáticamente válidas, sino ser capaz de llegar a identificar distintos, homogéneos e interpretables patrones de comportamiento energético que pudieran servir de sustrato para poder plantear procesos de planificación energética, de análisis técnico e incluso de toma de decisiones en empresas distribuidoras de energía.
-
-\subsubsection*{Evaluar resultados}
-La evaluación de los resultados es la tarea clave de esta fase y del proyecto en su conjunto, ya que permite establecer en qué medida los modelos de clustering construidos permiten conseguir el objetivo principal del análisis; el cual no es otro que segmentar los clientes no regulados en función de la forma de su curva característica anual de consumo energético.\\
+\subsection{Evaluación cualitativa y análisis visual de los clústeres}
+La evaluación de los resultados permite establecer en qué medida los modelos de clustering construidos permiten conseguir el objetivo principal del análisis; el cual no es otro que segmentar los clientes no regulados en función de la forma de su curva característica anual de consumo energético.\\
 
 En contraste con los problemas de aprendizaje supervisado, donde son las etiquetas de referencia las que permiten evaluar de forma directa el rendimiento, en el caso del clustering la evaluación tiene que ser abordada de forma multidimensional. En este trabajo se fundamenta en hasta tres ejes complementarios:
 \begin{itemize}
@@ -1115,11 +1174,9 @@ En contraste con los problemas de aprendizaje supervisado, donde son las etiquet
     \item Interpretabilidad energética de los patrones identificados
 \end{itemize}
 
-
 De acuerdo a los tres ejes anteriormente definidos, el análisis de resultados es planteado a partir de una evaluación global de patrones que han sido identificados, abordando aspectos como diferenciabilidad y coherencia interna de los clústeres obtenidos.\\
 
-\textbf{Diferenciabilidad: Curvas obtenidas por clúster\\}
-
+\subsubsection*{Diferenciabilidad: Curvas obtenidas por clúster}
 Los resultados de agrupación obtenidos a partir de la ejecución de los algoritmos K-Means, Gaussian Mixture, Birch y Spectral Clustering, dieron lugar a agrupaciones que mantenían consistencia en todos los casos, obteniendo curvas tipo perfectamente diferenciables por cada clúster.\\
 
 Este aspecto es relevante, ya que significa que los algoritmos han sido capaces de captar similitudes reales entre las curvas de carga de los clientes, no simplemente diferencias por consumo absoluto. Este comportamiento guarda relación directa con las decisiones tomadas en las fases de preparación y modelado de los datos, donde se normalizaron y alinearon las curvas de modo que se eliminaran sesgos por escalas y desplazamientos verticales.\\ 
@@ -1138,11 +1195,12 @@ La Figura \ref{fig:curvas_tipo_algoritmos_2x2} muestra de manera visual una comp
 
 Es cierto que existen pequeñas variaciones en las formas exactas de las curvas obtenidas por las diferentes técnicas, pero que todas ellas acaban coincidiendo en identificar un comportamiento energéticos diferenciables refuerza la idea de que el abordaje es robusto y que, en consecuencia, es correcta la elección de evaluar diferentes técnicas de clustering de manera comparativa.\\
 
-\textbf{Evaluación de homogeneidad y separación mediante PCA\\}
+\subsubsection*{Evaluación de homogeneidad y separación mediante PCA}
+Con la finalidad de enriquecer el análisis de los clústeres desde una perspectiva geométrica y visual, se llevó a cabo una transformación de la dimensionalidad usando Análisis de Componentes Principales (PCA) y proyectando las curvas características de los clientes en un espacio bidimensional.\\
 
-Con la finalidad de enriquecer el análisis de los clústeres desde una perspectiva geométrica y visual, se llevó a cabo una transformación de la dimensionalidad usando un Análisis de Componentes Principales (PCA) y proyectando las curvas características de los clientes en un espacio bidimensional.\\
+En este sentido, el uso de PCA responde únicamente a una finalidad exploratoria y de visualización, criterio que ha sido muy seguido en estudios del ámbito del análisis de perfiles de consumo energético. En \cite{Kallel2025ClusteringInterpretability} hacen uso de PCA como el medio para reducir la dimensionalidad de perfiles diarios de consumo eléctrico, así como facilitar su interpretabilidad, ya que esta técnica permite preservar gran parte de la varianza de los datos originales y mitigar efectos producidos por la alta dimensionalidad. De la misma forma en \cite{salmina2021dimensionality} hacen uso de PCA explícitamente sólo para la visualización bidimensional o tridimensional de clústeres obtenidos a partir de series temporales de consumo energético, siendo claramente, por lo tanto, una etapa separada del proceso de clustering.\\
 
-La representación de esta forma permite estudiar simultáneamente la separación entre los clústeres y la concentración de los clientes dentro del clúster, constituyendo una genuina evaluación de la estructura de los clústeres obtenidos.\\
+La representación obtenida de esta forma permite estudiar simultáneamente la separación entre los clústeres y la concentración de los clientes dentro del clúster, constituyendo una genuina evaluación de la estructura de los clústeres obtenidos.\\
 
 Los resultados indican que, en los cuatro algoritmos implicados en el proceso, los clústeres muestran una distribución en la representación espacial muy bien definida, donde se observa una separación clara entre los grupos y una buena compactación de los puntos dentro de cada clúster. La estructura de los clústeres puede observarse de manera gráfica en la Figura \ref{fig:PCA_analisis}.
 
@@ -1157,11 +1215,9 @@ Los resultados indican que, en los cuatro algoritmos implicados en el proceso, l
 Esta estructura confirma que los clientes que han quedado agrupados muestran similitudes en la forma de sus curvas de carga, y que los grupos resultantes no presentan solapamientos evidentes. Este comportamiento pone en evidencia la pertinencia de la correlación intra-clúster promedio como métrica de evaluación principal, puesto que se trata de una métrica que permite codificar de una forma más directa la semejanza entre cada curva en concreto y la curva tipo representativa de su clúster, cumpliendo exactamente con la intención del análisis.\\
 
 
-A partir de los resultados de la tarea de evaluación de los modelos, ejecutada en la Fase 4 (Modelado) del presente trabajo, en la cual se evaluó de manera cuantitativa la calidad de las agrupaciones generadas por los distintos algoritmos de clustering utilizando métricas internas de validación, a continuación se procede a la interpretación de los resultados de agrupamiento. Más concretamente, el análisis se enfoca en los clústeres obtenidos a partir de la aplicación del algoritmo Spectral Clustering, previamente seleccionado como el modelo que presenta el mejor desempeño.\\
 
-\textbf{Análisis detallado de los clústeres obtenidos mediante Spectral Clustering\\}
-    
-A partir de la selección del algoritmo Spectral Clustering, se procedió a analizar en detalle las curvas tipo correspondientes a cada clúster generado por Spectral Clustering, considerando no únicamente las curvas promedio, sino todas las curvas individuales de los clientes que conforman cada grupo. Este análisis permite evaluar la consistencia interna de los clústeres y extraer conclusiones sobre los comportamientos energéticos característicos de cada segmento.\\
+\subsubsection*{Curvas individuales por clúster}
+A partir de los resultados obtenidos en \ref{subsec:evaluacion_algoritmos} ``Evaluación cuantitativa de los algoritmos de clustering'' del presente trabajo, donde se evaluó de manera cuantitativa la calidad de las agrupaciones generadas por los distintos algoritmos de clustering utilizando métricas internas de validación, a continuación se procede a la interpretación de los resultados de agrupamiento. Más concretamente, el análisis se enfoca en los clústeres obtenidos a partir de la aplicación del algoritmo Spectral Clustering, previamente seleccionado como el modelo que presenta el mejor desempeño.\\
 
 En la Figura \ref{fig:curvas_clientes_SC} se presentan, para cada clúster obtenido mediante la aplicación del algoritmo Spectral Clustering, las curvas tipo de todos los clientes que conforman cada clúster respectivamente.
 
@@ -1173,6 +1229,8 @@ En la Figura \ref{fig:curvas_clientes_SC} se presentan, para cada clúster obten
     \end{center}
 \end{figure}
 
+
+\subsubsection*{Interpretación energética de los clústeres obtenidos}
 Al observar las curvas de carga por clúster de manera conjunta, es posible percibir la coherencia interna de los grupos obtenidos y distinguir entre diferentes patrones de consumo. Siguiendo esta observación, a continuación se muestra la interpretación energética de cada clúster que ha sido identificado a través de Spectral Clustering.\\
 
 \begin{itemize}
@@ -1184,75 +1242,43 @@ Al observar las curvas de carga por clúster de manera conjunta, es posible perc
 
 La clara diferenciación entre estos comportamientos confirma que los clústeres obtenidos no solo son estadísticamente consistentes, sino que además presentan una interpretación energética clara y útil, lo cual es fundamental para su aplicación en escenarios reales del sector eléctrico.
 
-\subsubsection*{Revisar el proceso}
-En esta tarea se realizó una revisión integral del proceso seguido a lo largo del proyecto de minería de datos, abarcando desde la comprensión del negocio hasta la evaluación de los modelos de clustering.\\
+\subsection{Selección final del mejor algoritmo}
+En base a los resultados cuantitativos (correlación intra-cluster, así como otros factores complementarios) y el análisis cualitativo (curvas tipo y proyección PCA) se escoge el algoritmo Spectral Clustering como el modelo final del componente. Esta elección se produce en base a su mayor correlación intra-cluster media (una valoración que analiza de una manera más directa la similitud estructural de las curvas de carga de cada cluster, en la línea de la finalidad básica del análisis).\\
 
-Se verificó que las fases de preparación de los datos, modelado y evaluación se ejecutaron de manera coherente con los objetivos planteados, y que las decisiones adoptadas en cada etapa se encuentran debidamente justificadas. En particular, se constató que la selección de las curvas tipo como representación del consumo anual, el uso de técnicas de normalización y alineación, y la elección de métricas de evaluación orientadas a la forma de las curvas fueron adecuadas para el problema abordado.\\
-
-Asimismo, se confirmó que el proceso ETL implementado garantiza la reproducibilidad del análisis y que los resultados obtenidos pueden ser replicados o actualizados conforme se disponga de nueva información de consumo. No se identificaron tareas críticas omitidas ni inconsistencias en el flujo metodológico seguido.
-
-\subsubsection*{Determinar siguientes pasos}
-Con base en la evaluación de los resultados y en la revisión del proceso, se determina que el proyecto ha cumplido satisfactoriamente los objetivos definidos para la segmentación de clientes no regulados del sector eléctrico.\\
-
-Dado que el alcance de la presente tesis se centra en el análisis y evaluación de los modelos de clustering, las actividades asociadas a la fase de despliegue operativo no se desarrollan en este trabajo. Por tanto, la implementación del modelo seleccionado en sistemas productivos o plataformas de gestión energética no aplica dentro del alcance actual.\\
-
-No obstante, se identifican como líneas futuras de trabajo la integración del modelo de clustering en herramientas de planificación energética, la actualización periódica de las agrupaciones con nuevos datos de consumo y la incorporación de variables adicionales que permitan enriquecer la caracterización de los clientes.
-
-
-\subsection{Despliegue}
-\subsubsection*{Planificar el despliegue}
-\subsubsection*{Planificar monitoreo y mantenimiento}
-\subsubsection*{Producir el reporte final}
-\subsubsection*{Revisar el proyecto}
-
-% RESULTADOS, CONCLUSIONES Y RECOMENDACIONES
-
-
-\chapter{Resultados, Conclusiones y Recomendaciones}
-\section{Resultados}
-Ejemplo de tabla:
-\begin{table}[h]
-    \centering
-    \begin{tabular}{|c|c|c|}
-        \hline
-        No. Prueba & Resultado & Tiempo [s] \\
-        \hline
-        1 & 10 & 0.9 \\
-        2 & 5 & 0.5 \\
-        \hline
-    \end{tabular}
-    \caption{Resultados de las pruebas realizadas}
-\end{table}
+En consecuencia, el modelo escogido constituye la base para la interpretación de los patrones de consumo eléctrico encontrados en los consumidores no regulados y su posible utilización en los procedimientos de análisis y de planeamiento energético.\\
 
 \section{Conclusiones}
+La realización del presente Trabajo de Integración Curricular utilizando algoritmos de aprendizaje no supervisado ha permitido evidenciar que el enfoque de segmentación de clientes en base a la forma de la curva característica anual de consumo constituye un enfoque técnicamente viable y mucho más representativo que los enfoques basados en promedios o en clasificaciones rigidas, al captar la variabilidad y complejidad del patrón real de consumo energético adecuadamente.\\
+
+El uso de la metodología CRISP-DM, adaptada a los objetivos del proyecto, proporcionó un marco de trabajo estructurado y sistemático para comprender el problema, preparar los datos y para poder comparar diferentes algoritmos de clustering de una forma objetiva. La modificación de la fase que proponía seleccionar la mejor agrupación en base a métricas de calidad y homogeneidad se mostraba coherente con la naturaleza exploratoria y no supervisada del análisis.\\
+
+El proceso de extracción, transformación y carga (ETL), implementado a través de Apache Airflow permitio la consolidación de los registros de consumo mensual en curvas anuales representativas normalizadas. Aspectos como la limpieza de datos, interpolación de valores nulos, exclusión de días no laborables y la normalización por día garantizaron consistencia, comparabilidad y la calidad de los datos de entrada para los algoritmos de clustering y posicionó a la fase de preparación de los datos como un aspecto fundamental para asegurar resultados confiables en las etapas posteriores de modelado y evaluación.\\
+
+
+La implementación y evaluación de los algoritmos K-Means, Gaussian Mixture, Birch y Spectral Clustering demostró que cada una de las técnicas tiene características diferentes en función de la estructura de los datos de consumo. La comparación, mediante las métricas internas de correlación intra-cluster promedio, Silhouette Score, Davies-Bouldin Index y Calinski-Harabasz Index, permitió cuantificar la coherencia interna de las agrupaciones e identificar la mejor separación relativa entre los clústeres.\\
+
+El uso de correlación intra-clúster promedio como principal métrica de evaluación evidenció ser especialmente adecuada para el análisis de las curvas de carga normalizadas, pues ésta permitió cuantificar la similitud en la forma de las curvas de los clientes que componen cada grupo, lo cual se alinea con el objetivo de segmentar a los clientes en función de su patrón característico de consumo y no en función de su magnitud absoluta.\\
+
+La evaluación cualitativa y las visualizaciones complementarias (curvas promedio por algoritmo, curvas individuales y proyección PCA) demostraron que los algoritmos implementados identifican patrones de consumo coherentes y diferenciados, particularmente, la aplicación de la técnica de Análisis de Componentes Principales (PCA), facilitó la interpretación de las agrupaciones obtenidas, dado que permite ofrecer una representación bidimensional de los clústeres para corroborar visualmente la coherencia de los patrones que los algoritmos de clustering han identificado dentro del conjunto de datos.\\
+
+El algoritmo Spectral Clustering, el cual fue seleccionado como el de mejor rendimiento al obtener la mayor correlación intra-cluster promedio, además de proporcionar resultados comparables a los que obtienen los otros algoritmos para las métricas complementarias que fueron utilizadas para evaluarlos, permitió identificar cuatro clústeres con un comportamiento energético claramente diferenciado. Estas agrupaciones permiten evidenciar perfiles de consumo que asociamos a los clientes con una fuerte presencia de actividad nocturna, clientes con una demanda estable durante el día, clientes con un perfil de consumo diurno mayoritario y clientes con un patrón escalonado donde se pueden apreciar ascensos y descensos abruptos de la demanda. Estos hallazgos permiten tener un insumo relevante para el análisis del comportamiento energético de los clientes no regulados, además de aportar información técnica relevante para los procesos de planificación energética y gestión de la demanda.\\
+
 \section{Recomendaciones}
+Se recomienda que en futuras aplicaciones operativas del componente se desarrolle un proceso de actualización periódica de las curvas de consumo, para que las segmentaciones recojan cambios en los hábitos de consumo asociados a cambios económicos, productivos o tecnológicos de clientes no regulados.\\
 
+Con el fin de ampliar la caracterización de los segmentos identificados, se recomienda incorporar, en futuros análisis, variables adicionales que no fueron tomadas en cuenta para el presente trabajo, tales como la actividad económica del cliente, datos sobre la climatología e indicadores socioeconómicos. Con este tipo de variables sería posible llegar a explicar de mejor manera los factores que influyen en la identificación de patrones de consumo, así como contribuir en el diseño de estrategias de análisis y gestión. No obstante, esta ampliación puede hacerse sin alterar el enfoque del componente trabajado, el cual se basa únicamente en segmentar a partir de la forma de la curva característica anual de consumo.\\
 
+Se recomienda mantener el uso de métricas orientadas a la similitud estructural de las curvas, como la correlación, en futuros análisis, ya que se demostró su idoneidad frente a índices que tienden a verse dañados por la alta variabilidad inherente a los perfiles de consumo eléctrico.\\
+
+Se propone tomar el componente desarrollado como una base metodológica para futuras tareas de análisis avanzado; por ejemplo, tareas de estudios de proyección de demanda o la identificación de grupos de clientes cuya demanda muestra comportamientos atípicos, aprovechando la infraestructura de datos y el flujo de trabajo ya implementados. En este sentido, podrían explorarse algoritmos de agrupamiento específicos para trabajar con series temporales o técnicas basadas en aprendizaje profundo que permiten captar patrones de variación más complejos en las curvas de carga, sin embargo, cualquier extensión en esta línea de investigación deberá ser evaluada cuidadosamente en función del posible impacto que ello pueda tener en la interpretabilidad de los resultados frente a las técnicas tradicionales así como también justificada con respecto al valor que esta puede aportar.
 % REFERENCIAS BIBLIOGRÁFICAS
 \chapter{Referencias Bibliográficas}
-
 \printbibliography[heading=none]
 
-Ejemplo IEEE:
-\begin{itemize}
-    \item \textbf{[1]} L. Carvajal, \textit{Metodología de la Investigación Científica}. Santiago de Cali: U.S.C., 2006.
-\end{itemize}
-
-
-
-https://ietresearch.onlinelibrary.wiley.com/doi/full/10.1049/ccs2.12080\\
-
-https://hpi.de/fileadmin/user_upload/fachgebiete/naumann/publications/2008/ETL_Management.pdf\\
-
-https://www.researchgate.net/profile/Sameer_Shukla3/publication/369899578_Developing_Pragmatic_Data_Pipelines_using_Apache_Airflow_on_Google_Cloud_Platform/links/647953c7b3dfd73b7759022a/Developing-Pragmatic-Data-Pipelines-using-Apache-Airflow-on-Google-Cloud-Platform.pdf?origin=journalDetail&_tp=eyJwYWdlIjoiam91cm5hbERldGFpbCJ9\\
-
-https://www.controlrecursosyenergia.gob.ec/wp-content/uploads/downloads/2021/03/Folleto-Resumen-Estad%C3%ADsticas-2011.pdf\\
-
-
-
 \chapter{Anexos}
-\section*{Anexo I. Conjunto de Datos Extensos}
-\section*{Anexo II. Formato de Entrevista}
-\section*{Anexo III. Enlaces}
+\section*{Anexo I. Código Python para el DAG de proceso ETL implementado}
+El código desarrollado para construir el DAG que compone todo el proceso ETL implementado en Apache Airflow se encuentra disponible en el siguiente enlace: ADJUNTAR ENLACE GITHUB
+\section*{Anexo II. Cuaderno de trabajo realizado para la implementación de los modelos de clustering}
+La implementación de todos los modelos de clustering mencionados en el presente documento puede encontrarse en un cuaderno de trabajo disponible en el siguiente enlace: ADJUNTAR ENLACE GITHUB
 
 \end{document}
