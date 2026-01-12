@@ -727,7 +727,9 @@ En la Figura \ref{fig:fig_desc_datos} se puede apreciar lo mencionado anteriorme
 \end{figure}
 
 \subsubsection*{Exploración de los datos}
-Se llevó a cabo un análisis exploratorio de los datos con el fin de comprender de manera general su estructura, calidad y características principales. Esta tarea posibilitó el descubrimiento de distribuciones, patrones globales y eventuales anomalías que podrían tener un impacto en las etapas subsiguientes del proceso de análisis.\\
+Se llevó a cabo un análisis exploratorio de los datos con el fin de comprender de manera general su estructura, calidad y características principales. Esta tarea posibilitó el descubrimiento de distribuciones, patrones globales y eventuales anomalías que podrían tener un impacto en las etapas subsiguientes del proceso de análisis.
+
+\vspace{3mm}
 
 Se incorporaron visualizaciones que reflejan las principales cualidades del conjunto de datos (Figura \ref{fig:fig_exploracion_datos}), se elaboró una imagen resumen que presenta la cantidad de clientes según el tipo de medición, como se distribuyen los registros totales por cliente, la variabilidad en el número de registros mediante un diagrama de caja y el número de registros que existen en función del intervalo de medición.
 
@@ -739,14 +741,16 @@ Se incorporaron visualizaciones que reflejan las principales cualidades del conj
 \end{center}
 \end{figure}
 
-El primer gráfico (superior izquierdo) indica que la mayoría de los clientes tienen registros de potencia activa y reactiva, mientras que un número menor tiene registros de energía. El segundo gráfico (superior derecho) revela que la mayoría de los clientes tienen entre 30.000 y 35040 registros, con algunos clientes teniendo significativamente un menor, un comportamiento que puede ser causado debido a pérdida de registros desde el propio sistema de medición.\\
+El primer gráfico (superior izquierdo) indica que la mayoría de los clientes tienen registros de potencia activa y reactiva, mientras que un número menor tiene registros de energía. El segundo gráfico (superior derecho) revela que la mayoría de los clientes tienen entre 30.000 y 35040 registros, con algunos clientes teniendo significativamente un menor, un comportamiento que puede ser causado debido a pérdida de registros desde el propio sistema de medición.
+
+\vspace{3mm}
 
 El tercer gráfico (inferior izquierdo) es un diagrama de cajas que muestra la variabilidad en el número de registros por cliente, indicando la presencia de algunos valores atípicos. Finalmente, el cuarto gráfico (inferior derecho) muestra que todos los clientes tienen un intervalo de medición de 15 minutos, lo cual es consistente con la frecuencia de medición esperada.
 
 \subsubsection*{Verificar calidad de los datos}
 Dadas las inconsistencias presentes en los archivos de medición, identificadas en tareas anteriores, se llevó a cabo una comprobación de su calidad. Esta tarea posibilitó determinar el grado de completitud, coherencia y consistencia de los datos antes de proceder con su preparación.\\
 
-Se llevaron a cabo varias comprobaciones con el objetivo de cuantificar y observar el impacto generado de estas anomalías sobre el conjunto total de datos. Para ello, se elaboró una imagen que resume los resultados obtenidos en términos de uniformidad de formato, consistencia numérica y presencia de valores nulos y ausentes.
+Se llevaron a cabo varias comprobaciones con el objetivo de cuantificar y observar el impacto generado de estas anomalías sobre el conjunto de datos. Para ello, se elaboró una imagen que resume los resultados obtenidos en términos de uniformidad de formato, consistencia numérica y completitud de los datos.
 
 \begin{figure}[ht]
 \begin{center}
@@ -756,18 +760,16 @@ Se llevaron a cabo varias comprobaciones con el objetivo de cuantificar y observ
 \end{center}
 \end{figure}
 
-Como se puede apreciar en el primer gráfico (superior izquierdo), el formato más común es el YYYY-MM-DD (66,3\%), seguido por YYYY/MM/DD (21,4\%) y DD/MM/YYYY (12,2\%). Esta falta de uniformidad en el formato de fecha es crítico debido a que para construir series temporales se debe tener un formato único, se requerirá un proceso de estandarización de formato de fecha para solucionarlo.\\
+Como se puede apreciar en el primer gráfico (superior izquierdo), el formato más común es el YYYY-MM-DD (66,3\%), seguido por YYYY/MM/DD (21,5\%) y DD/MM/YYYY (12,2\%). Esta falta de uniformidad en el formato de fecha es crítico debido a que para construir series temporales se debe tener un formato único, se requerirá un proceso de estandarización de formato de fecha para solucionarlo.\\
 
 El segundo gráfico (superior derecho) revela que dentro del grupo de clientes que poseen únicamente mediciones de energía, existen 74795 registros que tienen la coma como separador de miles. Si no se trata, esto provocará problemas relacionados con la interpretación de datos numéricos debido a que Python no trabaja con separadores de miles, y su separador decimal es el punto.\\
 
-El tercer gráfico (inferior izquierdo) muestra que 319 clientes tienen una completitud de datos mayor al 85\% del total ideal de registros anuales, mientras que 69 clientes se encuentran entre el 70\% y 85\%, debido a pérdidas de información derivadas del sistema de donde fueron obtenidas las mediciones.\\
+El tercer gráfico (inferior izquierdo) muestra que 320 clientes tienen una completitud de datos mayor al 85\% del total ideal de registros anuales, mientras que 68 clientes se encuentran entre el 70\% y 85\%, debido a pérdidas de información derivadas del sistema de donde fueron obtenidas las mediciones.\\
 
-Por último, el cuarto gráfico (inferior derecho) indica que dentro del grupo de clientes que solo tienen mediciones de potencias, existen en total 17 registros nulos, mientras que en el grupo de clientes que posee únicamente mediciones de energía, existe un total de 2339 registros nulos. El volúmen de registros que poseen valores nulos es mínimo respecto al total de registros global y por cliente, por lo que se considera apropiado utilizar un método de interpolación para llenar dichos valores. Este método posibilitará que sean estimados en función de la tendencia particular de cada cliente, conservando la coherencia temporal y el comportamiento original de los datos.
+Por último, el cuarto gráfico (inferior derecho) indica que dentro del grupo de clientes que solo tienen mediciones de potencias, existen en total 17 registros nulos, mientras que en el grupo de clientes que posee únicamente mediciones de energía, existe un total de 2259 registros nulos. El volúmen de registros que poseen valores nulos es mínimo respecto al total de registros global y por cliente, por lo que se considera apropiado utilizar un método de interpolación para llenar dichos valores. Este método posibilitará que sean estimados en función de la tendencia particular de cada cliente, conservando la coherencia temporal y el comportamiento original de los datos.
 
 \subsection*{\underline{Preparación de los datos}}
-En esta etapa, se implementó un proceso ETL a través de Apache Airflow en un entorno Docker, tal y como se ilustra en la Figura \ref{fig:proceso_etl}, gracias al cual se pudo orquestar de manera eficiente el flujo de procesamiento de los datos de consumo, garantizando automatización y trazabilidad.\\
-
-El uso de Apache Airflow permitió construir un pipeline totalmente modularizado, donde cada tarea del Grafo Acíclico Dirigido (DAG) constituyó una acción concreta en el proceso ETL. Este pipeline abarca desde la lectura y consolidación de los archivos mensuales de cada cliente hasta la elaboración de las curvas de carga características y su respectiva carga en MongoDB Atlas.
+En esta etapa, se implementó un proceso ETL a través de Apache Airflow en un entorno Docker, tal y como se ilustra en la Figura \ref{fig:proceso_etl}, gracias al cual se pudo orquestar de manera eficiente el flujo de procesamiento de los datos de consumo, garantizando automatización y trazabilidad.
 
 \begin{figure}[ht]
 \begin{center}
@@ -776,6 +778,8 @@ El uso de Apache Airflow permitió construir un pipeline totalmente modularizado
 \label{fig:proceso_etl}
 \end{center}
 \end{figure}
+
+El uso de Apache Airflow permitió construir un pipeline totalmente modularizado, donde cada tarea del Grafo Acíclico Dirigido (DAG) constituyó una acción concreta en el proceso ETL. Este pipeline abarca desde la lectura y consolidación de los archivos mensuales de cada cliente hasta la elaboración de las curvas de carga características y su respectiva carga en MongoDB Atlas.\\
 
 Para la implementación, Apache Airflow fue desplegado en contenedores Docker utilizando la imagen oficial, la cual configura varios servicios, entre ellos, los fundamentales para el funcionamiento de Airflow \cite{airflow_docs}:
 
@@ -794,7 +798,9 @@ Toda esta arquitectura se encuentra definida en \texttt{docker-compose.yaml}, ar
     \item /utils: Contiene un archivo con variables de entorno (\texttt{.env}), cuyo contenido son credenciales para comunicarse con MongoDB Atlas. Adicionalmente contiene el archivo \texttt{utilities.py}, el cual contiene funciones auxiliares para comunicación con la base de datos, estandarización de formato de fechas, generación de curvas, entre otros.
 \end{itemize}
 
-La Figura \ref{fig:volumenes_dockercompose} ilustra la modificación realizada al archivo \texttt{docker-compose.yaml} para añadir los volúmenes compartidos mencionados anteriormente:
+La Figura \ref{fig:volumenes_dockercompose} ilustra la modificación realizada al archivo \texttt{docker-compose.yaml} para añadir los volúmenes compartidos mencionados anteriormente. El contenido completo de dicho archivo se encuentra disponible en el anexo XYZ.
+
+\clearpage
 
 \begin{figure}[ht]
 \begin{center}
@@ -816,7 +822,7 @@ Una vez dentro de la CLI de cada servicio, se hizo uso del comando \texttt{pytho
 \end{center}
 \end{figure}
 
-Una vez establecido el ambiente de ejecución con sus respectivas dependencias, se estructuró el proceso ETL dentro de un DAG denominado \texttt{etl\_dag\_datos\_consumo}. Cada nodo que compone el grafo simboliza una tarea autónoma dentro del proceso ETL, ejecutada de manera secuencial o paralela en función de las dependencias que se hayan definido. El código Python correspondiente al DAG se encuentra disponible en el Anexo XYZ.
+Una vez que se ha establecido ambiente de ejecución con sus respectivas dependencias, se procedió a estructurar el proceso ETL dentro de un DAG denominado \texttt{etl\_dag\_datos\_consumo}. Cada nodo que compone el grafo simboliza una tarea autónoma dentro del proceso ETL, ejecutada de manera secuencial o paralela en función de las dependencias que se hayan definido. El código Python correspondiente al DAG se encuentra disponible en el Anexo XYZ.\\
 
 La orquestación general de este DAG en Apache Airflow se muestra en la Figura \ref{fig:dag_etl_process}, donde se evidencia el flujo de ejecución y la relación de dependencia entre las diferentes tareas que lo componen. A continuación se describe de manera general el propósito de cada tarea que integra dicho proceso:
 
@@ -904,6 +910,7 @@ Se decidió implementar un escalado individual para cada día de cada cliente, y
     S_{\text{escalada}} = \frac{S - S_{\text{min}}}{S_{\text{max}} - S_{\text{min}}}\label{eq:normalizacion}
 \end{equation}
 
+\clearpage
 La normalización resulta esencial en este caso, debido a que posibilita que los algoritmos de clustering se enfoquen exclusivamente en la forma de la curva de consumo y no en su magnitud, evitando que clientes con demandas altas influyan de manera desproporcionada en los resultados del análisis.\\
 
 La elección de escalar cada día de manera individual fue el resultado de llevar a cabo un estudio comparativo entre la normalización global aplicada al año completo y la normalización diaria que se empleó. La Figura \ref{fig:comparacion_normalizacion} evidencia que la normalización global tiende a suavizar la curva característica debido a que hay días con valores significativamente más altos respecto al resto. El comportamiento mencionado anteriormente es particularmente común en clientes no regulados, cuyos patrones de consumo presentan una alta variabilidad al estar vinculados con su actividad económica. En contraste, la normalización diaria mantiene la estructura relativa, dando como resultado una representación más precisa del patrón de consumo característico asociado al cliente.
@@ -1043,7 +1050,7 @@ El modelo se construye mediante la implementación práctica de las técnicas de
     \end{center}
     \end{figure}
     \item Hiperparametrización de los algoritmos\\ 
-    Se realizó un proceso de hiperparametrización para cada uno de los algoritmos de agrupamiento elegidos. Este procedimiento consistió en evaluar diferentes combinaciones de parámetros significativos para cada algoritmo, como los criterios de inicialización, el número máximo de iteraciones y parámetros particulares vinculados a cada algoritmo. La Tabla \ref{tab:param_grid_clustering} sintetiza los hiperparámetros más importantes que se tuvieron en cuenta durante el proceso de optimización, los cuales fueron elegidos según su efecto en la calidad de las agrupaciones.
+    Se realizó un proceso de hiperparametrización para cada uno de los algoritmos de agrupamiento elegidos. Este procedimiento consistió en evaluar diferentes combinaciones de parámetros significativos para cada algoritmo, como los criterios de inicialización, el número máximo de iteraciones y parámetros particulares de cada algoritmo. La Tabla \ref{tab:param_grid_clustering} sintetiza los hiperparámetros más importantes que se tuvieron en cuenta durante el proceso de optimización, los cuales fueron elegidos según su efecto en la calidad de las agrupaciones.
 
     \begin{longtable}{|p{4cm}|p{3.2cm}|p{6.4cm}|}
     \caption{Hiperparámetros evaluados para los algoritmos de clustering}
@@ -1158,7 +1165,9 @@ Finalmente, el proyecto permitió demostrar que la combinación de análisis cua
 % RESULTADOS, CONCLUSIONES Y RECOMENDACIONES
 
 
-\chapter{RESULTADOS, CONCLUSIONES Y RECOMENDACIONES}
+%\chapter{RESULTADOS, CONCLUSIONES Y RECOMENDACIONES}
+\chapter[RESULTADOS, CONCLUSIONES Y RECOMENDACIONES]{%
+\bfseries\fontsize{16pt}{16pt}\selectfont RESULTADOS, CONCLUSIONES Y RECOMENDACIONES}
 \section{Resultados}\label{sec:resultados}
 En este apartado se presentan los resultados obtenidos a partir de la aplicación y evaluación de los algoritmos de clustering sobre las curvas de carga características anuales de los clientes no regulados. Los resultados son producto de las fases de Modelado y Evaluación de la metodología CRISP-DM y permiten comparar el desempeño de los algoritmos implementados, evaluar la calidad de los agrupamientos generados y seleccionar el método más adecuado para la identificación de patrones de consumo energético.
 \subsection*{\underline{Evaluación cuantitativa de los algoritmos de clustering}}\label{subsec:evaluacion_algoritmos}
@@ -1273,7 +1282,7 @@ La clara diferenciación entre estos comportamientos confirma que los clústeres
 \subsection*{\underline{Selección final del mejor algoritmo}}
 En base a los resultados cuantitativos (correlación intra-clúster, así como otros factores complementarios) y el análisis cualitativo (curvas tipo y proyección PCA) se escoge el algoritmo Spectral Clustering como el modelo final del componente. Esta elección se produce en base a su mayor correlación intra-clúster media (una valoración que analiza de una manera más directa la similitud estructural de las curvas de carga de cada clúster, en la línea de la finalidad básica del análisis).\\
 
-En consecuencia, el modelo escogido constituye la base para la interpretación de los patrones de consumo eléctrico encontrados en los consumidores no regulados y su posible utilización en los procedimientos de análisis y de planeamiento energético.
+En consecuencia, el modelo escogido constituye la base para la interpretación de los patrones de consumo eléctrico encontrados en los consumidores no regulados y su posible utilización en los procedimientos de análisis y de planificación energética.
 
 \section{Conclusiones}
 El presente Trabajo de Integración Curricular ha permitido la evaluación e implementación de modelos de aprendizaje no supervisado para la segmentación de clientes no regulados del sector eléctrico, evidenciando que el uso de curvas características anuales de consumo se trata de un procedimiento totalmente viable desde una perspectiva técnica y siendo superior a aquellos métodos más simples como promedios o clasificaciones rígidas. La alternativa propuesta permitió poner de manifiesto la variabilidad y complejidad real que se esconden detrás de los patrones de consumo, logrando agrupaciones homogéneas y coherentes que muestran conductas energéticas diversas y valiosas para el estudio y planificación energética.\\
@@ -1284,6 +1293,7 @@ La revisión literaria de los algoritmos de clustering permitió la identificaci
 
 La adopción de la metodología CRISP-DM proporcionó un marco ordenado y sistemático para orientar las diferentes etapas del análisis de datos. La adaptación realizada en la fase final, enfocada en la elección de la mejor agrupación en función de métricas de calidad y homogeneidad, fue coherente y se alineó a la naturaleza exploratoria del aprendizaje no supervisado. Esto posibilitó garantizar un procedimiento ordenado, replicable y que fuese coherente con los objetivos técnicos del proyecto.\\
 
+\clearpage
 El uso del método del codo fue fundamental para establecer el número óptimo de agrupaciones a partir del análisis de la varianza intra-clúster. Considerando que la parte interesada había manifestado la necesidad de generar cuatro agrupaciones, la aplicación de este método permitió validar dicha elección, dado que a partir de dicho número la incorporación de más clústeres no produce mejoras relevantes. De este modo, se dispuso de un criterio técnico que respalda la elección del número de clústeres a emplear en la aplicación de los diferentes algoritmos de clustering.\\
 
 La evaluación de los resultados obtenidos se realizó mediante un enfoque mixto que integró análisis cualitativos y cuantitativos. La combinación de métricas como el puntaje de Silhouette, el índice de Davies-Bouldin, el índice de Calinski-Harabasz y la correlación intra-clúster promedio permitieron valorar la separación entre los clústeres y la coherencia interna desde una perspectiva cuantitativa. En contraste, para la evaluación cualitativa se utilizaron visualizaciones como proyecciones bidimensionales mediante PCA, curvas individuales por clúster y curvas promedio, lo cual hizo posible que los patrones de consumo detectados fueran interpretados claramente y que las agrupaciones conseguidas fueran validadas visualmente.
@@ -1296,6 +1306,7 @@ Se sugiere continuar utilizando métricas enfocadas en la similitud estructural 
 
 Se recomienda reutilizar y ampliar el flujo ETL y la infraestructura de datos implementados para el TIC, considerándolos como una base para futuros análisis energéticos, dado que su diseño modular y automatizado permite incorporar nuevos intervalos de medición sin generar cambios significativos en la estructura general del componente.\\
 
+\clearpage
 Con el objetivo de mejorar la caracterización de los segmentos obtenidos, se recomienda que en futuros proyectos se incluyan variables adicionales, como la actividad económica del cliente, información relacionada con el clima o algunos indicadores socioeconómicos, manteniendo como referencia principal el esquema de segmentación basado en la forma de la curva característica anual.\\
 
 Se recomienda que el componente desarrollado sea considerado como una base metodológica para trabajos posteriores orientados a análisis más avanzados, tales como estudios de proyección de la demanda, la identificación de clientes con comportamientos atípicos o la aplicación de técnicas de aprendizaje profundo, aprovechando los procesos de procesamiento y organización de datos ya definidos.

@@ -48,7 +48,7 @@ El flujo ETL procesa y prepara los datos para su análisis:
 
 Una vez procesados los datos, se agrupan los clientes según la **forma de sus curvas tipo**:  
 
-![Proceso de agrupación](./latex/imgs/Clustering_process.png)
+![Proceso de agrupación](./latex/imgs/ClusteringProcess.drawio.png)
 
 1. **Preprocesamiento**:
    - Ajuste de las curvas para que todas comiencen en (00:00, 0), eliminando desplazamientos en eje Y.
