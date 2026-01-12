@@ -798,7 +798,7 @@ Toda esta arquitectura se encuentra definida en \texttt{docker-compose.yaml}, ar
     \item /utils: Contiene un archivo con variables de entorno (\texttt{.env}), cuyo contenido son credenciales para comunicarse con MongoDB Atlas. Adicionalmente contiene el archivo \texttt{utilities.py}, el cual contiene funciones auxiliares para comunicación con la base de datos, estandarización de formato de fechas, generación de curvas, entre otros.
 \end{itemize}
 
-La Figura \ref{fig:volumenes_dockercompose} ilustra la modificación realizada al archivo \texttt{docker-compose.yaml} para añadir los volúmenes compartidos mencionados anteriormente. El contenido completo de dicho archivo se encuentra disponible en el anexo XYZ.
+La Figura \ref{fig:volumenes_dockercompose} ilustra la modificación realizada al archivo \texttt{docker-compose.yaml} para añadir los volúmenes compartidos mencionados anteriormente. El contenido completo de dicho archivo se encuentra disponible en el Anexo \ref{anexo:docker_compose}.
 
 \clearpage
 
@@ -822,7 +822,7 @@ Una vez dentro de la CLI de cada servicio, se hizo uso del comando \texttt{pytho
 \end{center}
 \end{figure}
 
-Una vez que se ha establecido ambiente de ejecución con sus respectivas dependencias, se procedió a estructurar el proceso ETL dentro de un DAG denominado \texttt{etl\_dag\_datos\_consumo}. Cada nodo que compone el grafo simboliza una tarea autónoma dentro del proceso ETL, ejecutada de manera secuencial o paralela en función de las dependencias que se hayan definido. El código Python correspondiente al DAG se encuentra disponible en el Anexo XYZ.\\
+Una vez que se ha establecido ambiente de ejecución con sus respectivas dependencias, se procedió a estructurar el proceso ETL dentro de un DAG denominado \texttt{etl\_dag\_datos\_consumo}. Cada nodo que compone el grafo simboliza una tarea autónoma dentro del proceso ETL, ejecutada de manera secuencial o paralela en función de las dependencias que se hayan definido. El código Python correspondiente al DAG se encuentra disponible en el Anexo \ref{anexo:dag_etl}.\\
 
 La orquestación general de este DAG en Apache Airflow se muestra en la Figura \ref{fig:dag_etl_process}, donde se evidencia el flujo de ejecución y la relación de dependencia entre las diferentes tareas que lo componen. A continuación se describe de manera general el propósito de cada tarea que integra dicho proceso:
 
@@ -951,7 +951,7 @@ La fase de modelado es el núcleo de CRISP-DM, en la que se crean los modelos qu
 \end{center}
 \end{figure}
 
-La Figura \ref{fig:proceso_agrupacion} presenta las diversas tareas que intervienen en el proceso de agrupación que se va a desarrollar en el presente componente, el gráfico fue creado en base al cuaderno de trabajo utilizado para realizar clustering, el cual se encuentra disponible en el Anexo XYZ. El diagrama ilustra la secuencia de trabajo que se implementó: obtener las curvas desde la base de datos, ajustar las curvas para comparabilidad, determinar el número óptimo de agrupaciones, optimizar parámetros de los algoritmos, aplicar los algoritmos, generar agrupaciones, evaluar las agrupaciones (tanto cuantitativa como cualitativamente) y seleccionar el algoritmo con el mejor desempeño.
+La Figura \ref{fig:proceso_agrupacion} presenta las diversas tareas que intervienen en el proceso de agrupación que se va a desarrollar en el presente componente, el gráfico fue creado en base al cuaderno de trabajo utilizado para realizar clustering, el cual se encuentra disponible en el Anexo \ref{anexo:notebook_clustering}. El diagrama ilustra la secuencia de trabajo que se implementó: obtener las curvas desde la base de datos, ajustar las curvas para comparabilidad, determinar el número óptimo de agrupaciones, optimizar parámetros de los algoritmos, aplicar los algoritmos, generar agrupaciones, evaluar las agrupaciones (tanto cuantitativa como cualitativamente) y seleccionar el algoritmo con el mejor desempeño.
 
 \subsubsection*{Seleccionar técnica de modelado}
 De acuerdo con la metodología CRISP-DM, la selección de la técnica de modelado busca identificar los algoritmos más adecuados para abordar el problema. Esto se hace considerando los objetivos del análisis y la naturaleza de los datos. En este estudio, el objetivo del modelado es segmentar a los clientes no regulados del sector eléctrico según la forma de su curva de carga característica anual. \\
@@ -1150,7 +1150,7 @@ La elaboración del informe final es el principal mecanismo de despliegue de los
 
 El informe debe integrar la descripción del proceso ETL que se diseña para la construcción de curvas de carga representativas anuales, así como las decisiones adoptadas para limpiar, normalizar e interpolar los datos de consumo energético. De la misma manera, se documenta con detalle el proceso de selección e implementación de los algoritmos de aprendizaje no supervisado, detallando los criterios utilizados para validar el número óptimo de agrupaciones y la optimización de los parámetros de cada modelo.\\
 
-El informe presentará de forma sistemática los resultados obtenidos por cada uno de los algoritmos de clustering, incorporando métricas cuantitativas de evaluación y representaciones gráficas de las agrupaciones generadas, así como de las curvas promedio y de las curvas individuales asociadas a cada clúster. Estas visualizaciones permitirán la interpretación de los patrones de consumo energético y la comparación entre las distintas técnicas evaluadas. El informe se encuentra disponible en el anexo XYZ.\\
+El informe presentará de forma sistemática los resultados obtenidos por cada uno de los algoritmos de clustering, incorporando métricas cuantitativas de evaluación y representaciones gráficas de las agrupaciones generadas, así como de las curvas promedio y de las curvas individuales asociadas a cada clúster. Estas visualizaciones permitirán la interpretación de los patrones de consumo energético y la comparación entre las distintas técnicas evaluadas. El informe se encuentra disponible en el Anexo \ref{anexo:reporte_final}.\\
 
 Así, el informe final tiene no solo la función de documentar lo que se ha hecho sino también un insumo técnico que puede ser utilizado por la empresa distribuidora de energía para futuros análisis relacionados con la planificación o estudios sobre la demanda eléctrica.
 \subsubsection*{Revisar el proyecto}
@@ -1316,9 +1316,32 @@ Se recomienda que el componente desarrollado sea considerado como una base metod
 \printbibliography[heading=none]
 
 \chapter{ANEXOS}
-\section*{Anexo I. Código Python para el DAG de proceso ETL implementado}
-El código desarrollado para construir el DAG que compone todo el proceso ETL implementado en Apache Airflow se encuentra disponible en el siguiente enlace: ADJUNTAR ENLACE GITHUB
-\section*{Anexo II. Cuaderno de trabajo realizado para la implementación de los modelos de clustering}
-La implementación de todos los modelos de clustering mencionados en el presente documento puede encontrarse en un cuaderno de trabajo disponible en el siguiente enlace: ADJUNTAR ENLACE GITHUB
+\renewcommand{\thesection}{\Roman{section}}
+Los anexos del presente trabajo se encuentran disponibles de forma digital a través de un repositorio público en GitHub. En esta sección se presentan los hipervínculos permanentes a los archivos y documentos complementarios utilizados y generados durante el desarrollo del proyecto.
+
+\section{Archivo docker-compose.yaml}
+\label{anexo:docker_compose}
+
+\href{https://github.com/azambrano43/clasificacion-clientes-eeq/blob/03af73c395536e0d1e2f2c7efd2fa13fe131e5a5/docker-compose.yaml}{Disponible en línea}
+
+\section{Código Python del DAG del proceso ETL}
+\label{anexo:dag_etl}
+
+\href{https://github.com/azambrano43/clasificacion-clientes-eeq/blob/03af73c395536e0d1e2f2c7efd2fa13fe131e5a5/dags/potencia_aparente_etl_dag.py}{Disponible en línea}
+
+\section{Cuaderno de trabajo de clustering}
+\label{anexo:notebook_clustering}
+
+\href{https://github.com/azambrano43/clasificacion-clientes-eeq/blob/03af73c395536e0d1e2f2c7efd2fa13fe131e5a5/notebooks/pruebas_cluster.ipynb}{Disponible en línea}
+
+\section{Reporte final del proyecto de minería de datos}
+\label{anexo:reporte_final}
+
+\href{https://github.com/azambrano43/clasificacion-clientes-eeq/blob/03af73c395536e0d1e2f2c7efd2fa13fe131e5a5/outputs/Despliegue%20-%20Reporte%20final.pdf}{Disponible en línea}
+
+\renewcommand{\thesection}{\arabic{section}}
+
+
+
 
 \end{document}
