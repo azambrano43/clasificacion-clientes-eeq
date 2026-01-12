@@ -11,9 +11,11 @@
 /logs
 /plugins
 /config
-/outputs
+outputs/*
 *.env
 *.pyc
+*clasificación_clientes-v2.ipynb*
+*clasificación_clientes.ipynb*
 //__pycache__
 # Ignorar todo en latex menos /imgs y archivos principales
 latex/*
@@ -21,3 +23,4 @@ latex/*
 !latex/main.tex
 !latex/main.pdf
 !latex/referencias.bib
+!outputs/Despliegue - Reporte final.pdf
